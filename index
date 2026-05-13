@@ -1,742 +1,357 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Visitas — Equipos Córdoba SAS</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0b0d12;
-      --surface: #13161e;
-      --surface2: #1a1f2b;
-      --border: #232a38;
-      --accent: #f5a623;
-      --accent2: #e05a00;
-      --accent3: #3b82f6;
-      --green: #22c55e;
-      --red: #ef4444;
-      --yellow: #f59e0b;
-      --purple: #a855f7;
-      --teal: #14b8a6;
-      --text: #e8edf5;
-      --muted: #8892a4;
-      --radius: 12px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visitas — Equipos Córdoba SAS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0d12;--surface:#13161e;--surface2:#1a1f2b;--border:#232a38;
+  --accent:#f5a623;--accent2:#e05a00;--accent3:#3b82f6;
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--purple:#a855f7;--teal:#14b8a6;
+  --text:#e8edf5;--muted:#8892a4;--radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(245,166,35,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,.02) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;position:relative;z-index:1;}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:20px 20px 0 0;}
+.login-logo{text-align:center;margin-bottom:32px;}
+.login-logo-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;}
+.login-logo h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+.login-logo h2 span{color:var(--accent);}
+.login-logo p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;}
+.login-field{margin-bottom:16px;}
+.login-field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.login-field input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.login-field input:focus{border-color:var(--accent);}
+.login-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;transition:opacity .2s;}
+.login-btn:hover{opacity:.85;}
+.login-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red);border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;display:none;}
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:100;background:rgba(11,13,18,.94);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.logo-text h1{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;line-height:1.2;}
+.logo-text h1 span{color:var(--accent);}
+.logo-text p{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: linear-gradient(rgba(245, 166, 35, .02) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 166, 35, .02) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none;
-      z-index: 0;
-    }
+/* ── MAIN LAYOUT ── */
+main{padding:24px 28px 48px;position:relative;z-index:1;max-width: 800px; margin: 0 auto;}
 
-    /* ── LOGIN ── */
-    #login-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+.form-card {background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+.form-section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.fg label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:600;}
+.fg input, .fg select, .fg textarea{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
+.fg input:focus, .fg select:focus, .fg textarea:focus{border-color:var(--accent);}
+.fg textarea{resize:vertical;min-height:100px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 
-    .login-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 380px;
-      position: relative;
-      z-index: 1;
-    }
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;padding:14px 20px;border-radius:10px;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;transition:all .2s;width:100%;display:flex;justify-content:center;align-items:center;gap:8px;}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
 
-    .login-box::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 20px 20px 0 0;
-    }
+.alert {padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none;}
+.alert-error {background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: var(--red);}
+.alert-success {background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); color: var(--green);}
+.alert-info {background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.3); color: var(--accent3);}
 
-    .login-logo {
-      text-align: center;
-      margin-bottom: 32px;
-    }
+.spinner{width:20px;height:20px;border:3px solid rgba(0,0,0,0.2);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+.spinner.white{border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-    .login-logo-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin: 0 auto 14px;
-    }
-
-    .login-logo h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .login-logo h2 span {
-      color: var(--accent);
-    }
-
-    .login-logo p {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-top: 4px;
-    }
-
-    .login-field {
-      margin-bottom: 16px;
-    }
-
-    .login-field label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      margin-bottom: 6px;
-    }
-
-    .login-field input {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 11px 14px;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color .2s;
-    }
-
-    .login-field input:focus {
-      border-color: var(--accent);
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: opacity .2s;
-    }
-
-    .login-btn:hover {
-      opacity: .85;
-    }
-
-    .login-err {
-      background: rgba(239, 68, 68, .1);
-      border: 1px solid rgba(239, 68, 68, .3);
-      color: var(--red);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 12px;
-      margin-bottom: 14px;
-      display: none;
-    }
-
-    /* ── HEADER ── */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(11, 13, 18, .94);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .logo-text h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-
-    .logo-text h1 span {
-      color: var(--accent);
-    }
-
-    .logo-text p {
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-    }
-
-    /* ── MAIN LAYOUT ── */
-    main {
-      padding: 24px 28px 48px;
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .form-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .form-section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .fg {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-
-    .fg label {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      font-weight: 600;
-    }
-
-    .fg input,
-    .fg select,
-    .fg textarea {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 12px 14px;
-      border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color .2s;
-      width: 100%;
-    }
-
-    .fg input:focus,
-    .fg select:focus,
-    .fg textarea:focus {
-      border-color: var(--accent);
-    }
-
-    .fg textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #000;
-      padding: 14px 20px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      transition: all .2s;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-primary:hover {
-      opacity: .85;
-      transform: translateY(-1px);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .alert {
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      margin-top: 16px;
-      display: none;
-    }
-
-    .alert-error {
-      background: rgba(239, 68, 68, .1);
-      border: 1px solid rgba(239, 68, 68, .3);
-      color: var(--red);
-    }
-
-    .alert-success {
-      background: rgba(34, 197, 94, .1);
-      border: 1px solid rgba(34, 197, 94, .3);
-      color: var(--green);
-    }
-
-    .alert-info {
-      background: rgba(59, 130, 246, .1);
-      border: 1px solid rgba(59, 130, 246, .3);
-      color: var(--accent3);
-    }
-
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(0, 0, 0, 0.2);
-      border-top-color: #000;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      display: none;
-    }
-
-    .spinner.white {
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      border-top-color: #fff;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @media(max-width:640px) {
-
-      header,
-      main {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-card {
-        padding: 16px;
-      }
-    }
-  </style>
+@media(max-width:640px){
+  header,main{padding-left:16px;padding-right:16px;}
+  .form-grid{grid-template-columns:1fr;}
+  .form-card{padding:16px;}
+}
+</style>
 </head>
-
 <body>
 
-  <!-- LOGIN -->
-  <div id="login-screen">
-    <div class="login-box">
-      <div class="login-logo">
-        <div class="login-logo-icon">👷</div>
-        <h2>Equipos Córdoba <span>SAS</span></h2>
-        <p>CONTROL DE VISITAS</p>
-      </div>
-      <div class="login-err" id="login-err">Usuario o clave incorrectos</div>
-      <div class="login-field"><label>Usuario</label><input type="text" id="inp-user" placeholder="Ingrese usuario"></div>
-      <div class="login-field"><label>Clave</label><input type="password" id="inp-pass" placeholder="Ingrese clave"></div>
-      <button class="login-btn" onclick="doLogin()">Ingresar</button>
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">👷</div>
+      <h2>Equipos Córdoba <span>SAS</span></h2>
+      <p>CONTROL DE VISITAS</p>
     </div>
+    <div class="login-err" id="login-err">Usuario o clave incorrectos</div>
+    <div class="login-field"><label>Usuario</label><input type="text" id="inp-user" placeholder="admin"></div>
+    <div class="login-field"><label>Clave</label><input type="password" id="inp-pass" placeholder="admin2026"></div>
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
   </div>
+</div>
 
-  <!-- APP -->
-  <div id="app" style="display:none;">
-    <header>
-      <div class="logo">
-        <div class="logo-icon">👷</div>
-        <div class="logo-text">
-          <h1>Equipos Córdoba <span>SAS</span></h1>
-          <p>Visitas de Obra</p>
+<!-- APP -->
+<div id="app" style="display:none;">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">👷</div>
+      <div class="logo-text">
+        <h1>Equipos Córdoba <span>SAS</span></h1>
+        <p>Visitas de Obra</p>
+      </div>
+    </div>
+    <div style="font-size: 12px; color: var(--muted);"><span id="user-display"></span> | <a href="#" onclick="logout()" style="color:var(--accent);text-decoration:none;">Salir</a></div>
+  </header>
+
+  <main>
+    <div class="form-card">
+      <div class="form-section-title">Registro de Visita</div>
+      
+      <form id="visita-form">
+        <div class="fg">
+          <label>Nombre Cliente *</label>
+          <input type="text" id="cliente" required>
         </div>
-      </div>
-      <div style="font-size: 12px; color: var(--muted);"><span id="user-display"></span> | <a href="#"
-          onclick="logout()" style="color:var(--accent);text-decoration:none;">Salir</a></div>
-    </header>
-
-    <main>
-      <div class="form-card">
-        <div class="form-section-title">Registro de Visita</div>
-
-        <form id="visita-form">
+        
+        <div class="form-grid">
           <div class="fg">
-            <label>Asesor</label>
-            <input type="text" id="inp-asesor" readonly placeholder="Cargando...">
+            <label>Tel. Cliente</label>
+            <input type="tel" id="tel_cliente">
           </div>
-
           <div class="fg">
-            <label>Nombre Cliente *</label>
-            <input type="text" id="cliente" required>
+            <label>Proyecto *</label>
+            <input type="text" id="proyecto" required>
           </div>
+        </div>
 
-          <div class="form-grid">
-            <div class="fg">
-              <label>Tel. Cliente</label>
-              <input type="tel" id="tel_cliente">
-            </div>
-            <div class="fg">
-              <label>Proyecto *</label>
-              <input type="text" id="proyecto" required>
-            </div>
-          </div>
-
-          <div class="form-grid">
-            <div class="fg">
-              <label>Nombre Contacto</label>
-              <input type="text" id="contacto">
-            </div>
-            <div class="fg">
-              <label>Tel. Contacto</label>
-              <input type="tel" id="tel_contacto">
-            </div>
-          </div>
-
+        <div class="form-grid">
           <div class="fg">
-            <label>Dirección</label>
-            <input type="text" id="direccion">
+            <label>Nombre Contacto</label>
+            <input type="text" id="contacto">
           </div>
-
-          <div class="form-grid">
-            <div class="fg">
-              <label>Departamento *</label>
-              <select id="departamento" required onchange="loadMunicipios()">
-                <option value="">Seleccione...</option>
-              </select>
-            </div>
-            <div class="fg">
-              <label>Municipio *</label>
-              <select id="municipio" required>
-                <option value="">Seleccione...</option>
-              </select>
-            </div>
-          </div>
-
           <div class="fg">
-            <label>Observaciones</label>
-            <textarea id="observaciones"></textarea>
+            <label>Tel. Contacto</label>
+            <input type="tel" id="tel_contacto">
           </div>
+        </div>
 
-          <div class="alert alert-info" id="gps-status" style="display:block; margin-bottom: 16px;">
-            📍 La ubicación GPS se capturará automáticamente al guardar.
+        <div class="fg">
+          <label>Dirección</label>
+          <input type="text" id="direccion">
+        </div>
+
+        <div class="form-grid">
+          <div class="fg">
+            <label>Departamento *</label>
+            <select id="departamento" required onchange="loadMunicipios()">
+              <option value="">Seleccione...</option>
+            </select>
           </div>
+          <div class="fg">
+            <label>Municipio *</label>
+            <select id="municipio" required>
+              <option value="">Seleccione...</option>
+            </select>
+          </div>
+        </div>
 
-          <div class="alert alert-error" id="msg-error"></div>
-          <div class="alert alert-success" id="msg-success"></div>
+        <div class="fg">
+          <label>Observaciones</label>
+          <textarea id="observaciones"></textarea>
+        </div>
 
-          <button type="submit" class="btn-primary" id="btn-submit">
-            <div class="spinner" id="submit-spinner"></div>
-            <span id="submit-text">💾 Guardar Visita y GPS</span>
-          </button>
-        </form>
-      </div>
-    </main>
-  </div>
+        <div class="alert alert-info" id="gps-status" style="display:block; margin-bottom: 16px;">
+          📍 La ubicación GPS se capturará automáticamente al guardar.
+        </div>
+        
+        <div class="alert alert-error" id="msg-error"></div>
+        <div class="alert alert-success" id="msg-success"></div>
 
-  <script>
-    // --- DATOS DE COLOMBIA ---
-    const colombiaData = {
-      "CÓRDOBA": ["MONTERÍA", "AYAPEL", "BUENAVISTA", "CANALETE", "CERETÉ", "CHIMÁ", "CHINÚ", "CIÉNAGA DE ORO", "COTORRA", "LA APARTADA", "LORICA", "LOS CÓRDOBAS", "MOMIL", "MOÑITOS", "MONTELÍBANO", "PLANETA RICA", "PUEBLO NUEVO", "PUERTO ESCONDIDO", "PUERTO LIBERTADOR", "PURÍSIMA", "SAHAGÚN", "SAN ANDRÉS DE SOTAVENTO", "SAN ANTERO", "SAN BERNARDO DEL VIENTO", "SAN CARLOS", "SAN JOSÉ DE URÉ", "SAN PELAYO", "TIERRALTA", "TUCHÍN", "VALENCIA"],
-      "ANTIOQUIA": ["MEDELLÍN", "BELLO", "ITAGÜÍ", "ENVIGADO", "APARTADÓ", "CAUCASIA"],
-      "SUCRE": ["SINCELEJO", "COROZAL", "COVEÑAS", "SAMPUÉS", "TOLÚ"],
-      "BOLÍVAR": ["CARTAGENA", "MAGANGUÉ", "TURBACO", "CARMEN DE BOLÍVAR"],
-      "ATLÁNTICO": ["BARRANQUILLA", "SOLEDAD", "MALAMBO", "SABANALARGA"]
-    };
+        <button type="submit" class="btn-primary" id="btn-submit">
+          <div class="spinner" id="submit-spinner"></div>
+          <span id="submit-text">💾 Guardar Visita y GPS</span>
+        </button>
+      </form>
+    </div>
+  </main>
+</div>
 
-    // URL del Webhook de Google Apps Script (A reemplazar)
-    // Se debe publicar como aplicación web, accesible a "Cualquiera"
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyP1EvqB_nt1oa7McPm13tCATjYTte1B_t2Ya_8P0FdQEGqd5GXqt9O514QiDgHyhP6g/exec';
+<script>
+// --- DATOS DE COLOMBIA ---
+const colombiaData = {
+  "CÓRDOBA": ["MONTERÍA", "AYAPEL", "BUENAVISTA", "CANALETE", "CERETÉ", "CHIMÁ", "CHINÚ", "CIÉNAGA DE ORO", "COTORRA", "LA APARTADA", "LORICA", "LOS CÓRDOBAS", "MOMIL", "MOÑITOS", "MONTELÍBANO", "PLANETA RICA", "PUEBLO NUEVO", "PUERTO ESCONDIDO", "PUERTO LIBERTADOR", "PURÍSIMA", "SAHAGÚN", "SAN ANDRÉS DE SOTAVENTO", "SAN ANTERO", "SAN BERNARDO DEL VIENTO", "SAN CARLOS", "SAN JOSÉ DE URÉ", "SAN PELAYO", "TIERRALTA", "TUCHÍN", "VALENCIA"],
+  "ANTIOQUIA": ["MEDELLÍN", "BELLO", "ITAGÜÍ", "ENVIGADO", "APARTADÓ", "CAUCASIA"],
+  "SUCRE": ["SINCELEJO", "COROZAL", "COVEÑAS", "SAMPUÉS", "TOLÚ"],
+  "BOLÍVAR": ["CARTAGENA", "MAGANGUÉ", "TURBACO", "CARMEN DE BOLÍVAR"],
+  "ATLÁNTICO": ["BARRANQUILLA", "SOLEDAD", "MALAMBO", "SABANALARGA"]
+};
 
-    let currentUser = '';
+// URL del Webhook de Google Apps Script (A reemplazar)
+// Se debe publicar como aplicación web, accesible a "Cualquiera"
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyb--reemplazar--/exec';
+
+let currentUser = '';
 
 function doLogin() {
-  const u = document.getElementById('inp-user').value.trim();
-  const p = document.getElementById('inp-pass').value.trim();
-  const btn = document.querySelector('.login-btn');
-  const err = document.getElementById('login-err');
-
-  if (!u || !p) {
-    err.textContent = 'Ingresa usuario y clave';
-    err.style.display = 'block';
-    return;
+  const u = document.getElementById('inp-user').value;
+  const p = document.getElementById('inp-pass').value;
+  if(u === 'admin' && p === 'admin2026') {
+    currentUser = u;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('user-display').innerText = u;
+    initForm();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
   }
-
-  // Simulación si no hay URL configurada
-  if (SCRIPT_URL.includes('--reemplazar--')) {
-    if (u === 'admin' && p === 'admin2026') {
-      successLogin(u);
-    } else {
-      err.textContent = 'Usuario/clave incorrectos (Modo Local)';
-      err.style.display = 'block';
-    }
-    return;
-  }
-
-  btn.textContent = 'Verificando...';
-  btn.disabled = true;
-  err.style.display = 'none';
-
-  fetch(SCRIPT_URL + '?action=login&u=' + encodeURIComponent(u) + '&p=' + encodeURIComponent(p))
-    .then(r => r.json())
-    .then(data => {
-      btn.textContent = 'Ingresar';
-      btn.disabled = false;
-      if (data.status === 'success') {
-        successLogin(u);
-      } else {
-        err.textContent = 'Usuario o clave incorrectos';
-        err.style.display = 'block';
-      }
-    })
-    .catch(e => {
-      btn.textContent = 'Ingresar';
-      btn.disabled = false;
-      err.textContent = 'Error de conexión. Verifica la URL.';
-      err.style.display = 'block';
-    });
 }
 
-function successLogin(u) {
-  currentUser = u;
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('inp-pass').value = '';
+}
+
+function initForm() {
+  const deptoSelect = document.getElementById('departamento');
+  deptoSelect.innerHTML = '<option value="">Seleccione...</option>';
+  for(let depto in colombiaData) {
+    let opt = document.createElement('option');
+    opt.value = depto;
+    opt.innerHTML = depto;
+    deptoSelect.appendChild(opt);
+  }
+  deptoSelect.value = "CÓRDOBA";
+  loadMunicipios();
+  document.getElementById('municipio').value = "MONTERÍA";
+}
+
+function loadMunicipios() {
+  const depto = document.getElementById('departamento').value;
+  const munSelect = document.getElementById('municipio');
+  munSelect.innerHTML = '<option value="">Seleccione...</option>';
+  if(depto && colombiaData[depto]) {
+    colombiaData[depto].forEach(m => {
+      let opt = document.createElement('option');
+      opt.value = m;
+      opt.innerHTML = m;
+      munSelect.appendChild(opt);
+    });
+  }
+}
+
+document.getElementById('visita-form').addEventListener('submit', function(e) {
+  e.preventDefault();
   
-  // Auto-fill and lock the Asesor field
-  const asesorInput = document.getElementById('inp-asesor');
-  if (asesorInput) {
-    asesorInput.value = u;
-    asesorInput.style.backgroundColor = 'var(--surface2)';
-    asesorInput.style.color = 'var(--muted)';
-    asesorInput.style.cursor = 'not-allowed';
+  if(!navigator.geolocation) {
+    showError("Tu navegador no soporta GPS. No se puede guardar.");
+    return;
   }
 
-  initForm();
-  document.getElementById('user-display').innerText = u;
+  setLoading(true);
+  hideMessages();
+  
+  // Obtenemos GPS
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      const acc = position.coords.accuracy;
+      
+      sendData(lat, lng, acc);
+    },
+    function(error) {
+      setLoading(false);
+      let msg = "Error al obtener GPS.";
+      if(error.code == 1) msg = "Debes permitir el acceso a la ubicación.";
+      if(error.code == 2) msg = "Posición GPS no disponible.";
+      if(error.code == 3) msg = "Tiempo de espera agotado para el GPS.";
+      showError(msg);
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
+});
+
+function sendData(lat, lng, acc) {
+  const payload = {
+    asesor: currentUser,
+    cliente: document.getElementById('cliente').value,
+    tel_cliente: document.getElementById('tel_cliente').value,
+    contacto: document.getElementById('contacto').value,
+    tel_contacto: document.getElementById('tel_contacto').value,
+    proyecto: document.getElementById('proyecto').value,
+    direccion: document.getElementById('direccion').value,
+    departamento: document.getElementById('departamento').value,
+    municipio: document.getElementById('municipio').value,
+    observaciones: document.getElementById('observaciones').value,
+    lat: lat,
+    lng: lng,
+    acc: acc,
+    map_url: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+  };
+
+  // Check if SCRIPT_URL is default/not set
+  if(SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbxyP1EvqB_nt1oa7McPm13tCATjYTte1B_t2Ya_8P0FdQEGqd5GXqt9O514QiDgHyhP6g/exec')) {
+      setLoading(false);
+      showSuccess(`¡Simulación Exitosa! (Falta URL de Google Sheets)<br>GPS capturado: ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+      document.getElementById('visita-form').reset();
+      initForm();
+      return;
+  }
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    setLoading(false);
+    showSuccess("Visita guardada exitosamente con ubicación GPS.");
+    document.getElementById('visita-form').reset();
+    initForm();
+  })
+  .catch(err => {
+    setLoading(false);
+    showError("Error de conexión. Intente nuevamente.");
+  });
 }
 
-    function logout() {
-      document.getElementById('login-screen').style.display = 'flex';
-      document.getElementById('app').style.display = 'none';
-      document.getElementById('inp-pass').value = '';
-    }
+function setLoading(isLoading) {
+  const btn = document.getElementById('btn-submit');
+  const spin = document.getElementById('submit-spinner');
+  const txt = document.getElementById('submit-text');
+  
+  if(isLoading) {
+    btn.disabled = true;
+    spin.style.display = 'block';
+    txt.innerText = 'Obteniendo GPS y Guardando...';
+  } else {
+    btn.disabled = false;
+    spin.style.display = 'none';
+    txt.innerText = '💾 Guardar Visita y GPS';
+  }
+}
 
-    function initForm() {
-      const deptoSelect = document.getElementById('departamento');
-      deptoSelect.innerHTML = '<option value="">Seleccione...</option>';
-      for (let depto in colombiaData) {
-        let opt = document.createElement('option');
-        opt.value = depto;
-        opt.innerHTML = depto;
-        deptoSelect.appendChild(opt);
-      }
-      deptoSelect.value = "CÓRDOBA";
-      loadMunicipios();
-      document.getElementById('municipio').value = "MONTERÍA";
-    }
+function showError(msg) {
+  const el = document.getElementById('msg-error');
+  el.innerHTML = '❌ ' + msg;
+  el.style.display = 'block';
+}
 
-    function loadMunicipios() {
-      const depto = document.getElementById('departamento').value;
-      const munSelect = document.getElementById('municipio');
-      munSelect.innerHTML = '<option value="">Seleccione...</option>';
-      if (depto && colombiaData[depto]) {
-        colombiaData[depto].forEach(m => {
-          let opt = document.createElement('option');
-          opt.value = m;
-          opt.innerHTML = m;
-          munSelect.appendChild(opt);
-        });
-      }
-    }
+function showSuccess(msg) {
+  const el = document.getElementById('msg-success');
+  el.innerHTML = '✅ ' + msg;
+  el.style.display = 'block';
+}
 
-    document.getElementById('visita-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      if (!navigator.geolocation) {
-        showError("Tu navegador no soporta GPS. No se puede guardar.");
-        return;
-      }
-
-      setLoading(true);
-      hideMessages();
-
-      // Obtenemos GPS
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          const acc = position.coords.accuracy;
-
-          sendData(lat, lng, acc);
-        },
-        function (error) {
-          setLoading(false);
-          let msg = "Error al obtener GPS.";
-          if (error.code == 1) msg = "⚠️ Permiso de ubicación denegado.<br><br><b>Para solucionarlo:</b><br>1. Verifica que la app se abra por <b>HTTPS</b> (no funciona con file:// o http://)<br>2. En tu navegador, toca el ícono 🔒 en la barra de dirección<br>3. Activa el permiso de <b>Ubicación</b><br>4. Revisa que el GPS del teléfono esté encendido<br><br>Luego presiona Guardar de nuevo.";
-          if (error.code == 2) msg = "📡 Posición GPS no disponible. Verifica que el GPS de tu teléfono esté activado e intenta de nuevo.";
-          if (error.code == 3) msg = "⏱️ Tiempo de espera agotado para el GPS. Sal a un lugar abierto y presiona Guardar de nuevo.";
-          showError(msg);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-      );
-    });
-
-    function sendData(lat, lng, acc) {
-      const payload = {
-        asesor: currentUser,
-        cliente: document.getElementById('cliente').value,
-        tel_cliente: document.getElementById('tel_cliente').value,
-        contacto: document.getElementById('contacto').value,
-        tel_contacto: document.getElementById('tel_contacto').value,
-        proyecto: document.getElementById('proyecto').value,
-        direccion: document.getElementById('direccion').value,
-        departamento: document.getElementById('departamento').value,
-        municipio: document.getElementById('municipio').value,
-        observaciones: document.getElementById('observaciones').value,
-        lat: lat,
-        lng: lng,
-        acc: acc,
-        map_url: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
-      };
-
-      // Check if SCRIPT_URL is default/not set
-      if (SCRIPT_URL.includes('--reemplazar--')) {
-        setLoading(false);
-        showSuccess(`¡Simulación Exitosa! (Falta URL de Google Sheets)<br>GPS capturado: ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
-        document.getElementById('visita-form').reset();
-        initForm();
-        return;
-      }
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload)
-      })
-        .then(() => {
-          setLoading(false);
-          showSuccess("Visita guardada exitosamente con ubicación GPS.");
-          document.getElementById('visita-form').reset();
-          initForm();
-        })
-        .catch(err => {
-          setLoading(false);
-          showError("Error de conexión. Intente nuevamente.");
-        });
-    }
-
-    function setLoading(isLoading) {
-      const btn = document.getElementById('btn-submit');
-      const spin = document.getElementById('submit-spinner');
-      const txt = document.getElementById('submit-text');
-
-      if (isLoading) {
-        btn.disabled = true;
-        spin.style.display = 'block';
-        txt.innerText = 'Obteniendo GPS y Guardando...';
-      } else {
-        btn.disabled = false;
-        spin.style.display = 'none';
-        txt.innerText = '💾 Guardar Visita y GPS';
-      }
-    }
-
-    function showError(msg) {
-      const el = document.getElementById('msg-error');
-      el.innerHTML = '❌ ' + msg;
-      el.style.display = 'block';
-    }
-
-    function showSuccess(msg) {
-      const el = document.getElementById('msg-success');
-      el.innerHTML = '✅ ' + msg;
-      el.style.display = 'block';
-    }
-
-    function hideMessages() {
-      document.getElementById('msg-error').style.display = 'none';
-      document.getElementById('msg-success').style.display = 'none';
-    }
-  </script>
+function hideMessages() {
+  document.getElementById('msg-error').style.display = 'none';
+  document.getElementById('msg-success').style.display = 'none';
+}
+</script>
 </body>
-
 </html>
