@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Visitas — Equipos Córdoba SAS</title>
+  <title>Visitas â€” Equipos CÃ³rdoba SAS</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
     rel="stylesheet">
@@ -50,7 +50,7 @@
       z-index: 0;
     }
 
-    /* ── LOGIN ── */
+    /* â”€â”€ LOGIN â”€â”€ */
     #login-screen {
       position: fixed;
       inset: 0;
@@ -180,7 +180,7 @@
       display: none;
     }
 
-    /* ── HEADER ── */
+    /* â”€â”€ HEADER â”€â”€ */
     header {
       position: sticky;
       top: 0;
@@ -232,7 +232,7 @@
       letter-spacing: .8px;
     }
 
-    /* ── MAIN LAYOUT ── */
+    /* â”€â”€ MAIN LAYOUT â”€â”€ */
     main {
       padding: 24px 28px 48px;
       position: relative;
@@ -409,8 +409,8 @@
   <div id="login-screen">
     <div class="login-box">
       <div class="login-logo">
-        <div class="login-logo-icon">👷</div>
-        <h2>Equipos Córdoba <span>SAS</span></h2>
+        <div class="login-logo-icon">ðŸ‘·</div>
+        <h2>Equipos CÃ³rdoba <span>SAS</span></h2>
         <p>CONTROL DE VISITAS</p>
       </div>
       <div class="login-err" id="login-err">Usuario o clave incorrectos</div>
@@ -424,9 +424,9 @@
   <div id="app" style="display:none;">
     <header>
       <div class="logo">
-        <div class="logo-icon">👷</div>
+        <div class="logo-icon">ðŸ‘·</div>
         <div class="logo-text">
-          <h1>Equipos Córdoba <span>SAS</span></h1>
+          <h1>Equipos CÃ³rdoba <span>SAS</span></h1>
           <p>Visitas de Obra</p>
         </div>
       </div>
@@ -472,7 +472,7 @@
           </div>
 
           <div class="fg">
-            <label>Dirección</label>
+            <label>DirecciÃ³n</label>
             <input type="text" id="direccion">
           </div>
 
@@ -497,7 +497,7 @@
           </div>
 
           <div class="alert alert-info" id="gps-status" style="display:block; margin-bottom: 16px;">
-            📍 La ubicación GPS se capturará automáticamente al guardar.
+            ðŸ“ La ubicaciÃ³n GPS se capturarÃ¡ automÃ¡ticamente al guardar.
           </div>
 
           <div class="alert alert-error" id="msg-error"></div>
@@ -505,7 +505,7 @@
 
           <button type="submit" class="btn-primary" id="btn-submit">
             <div class="spinner" id="submit-spinner"></div>
-            <span id="submit-text">💾 Guardar Visita y GPS</span>
+            <span id="submit-text">ðŸ’¾ Guardar Visita y GPS</span>
           </button>
         </form>
       </div>
@@ -515,15 +515,15 @@
   <script>
     // --- DATOS DE COLOMBIA ---
     const colombiaData = {
-      "CÓRDOBA": ["MONTERÍA", "AYAPEL", "BUENAVISTA", "CANALETE", "CERETÉ", "CHIMÁ", "CHINÚ", "CIÉNAGA DE ORO", "COTORRA", "LA APARTADA", "LORICA", "LOS CÓRDOBAS", "MOMIL", "MOÑITOS", "MONTELÍBANO", "PLANETA RICA", "PUEBLO NUEVO", "PUERTO ESCONDIDO", "PUERTO LIBERTADOR", "PURÍSIMA", "SAHAGÚN", "SAN ANDRÉS DE SOTAVENTO", "SAN ANTERO", "SAN BERNARDO DEL VIENTO", "SAN CARLOS", "SAN JOSÉ DE URÉ", "SAN PELAYO", "TIERRALTA", "TUCHÍN", "VALENCIA"],
-      "ANTIOQUIA": ["MEDELLÍN", "BELLO", "ITAGÜÍ", "ENVIGADO", "APARTADÓ", "CAUCASIA"],
-      "SUCRE": ["SINCELEJO", "COROZAL", "COVEÑAS", "SAMPUÉS", "TOLÚ"],
-      "BOLÍVAR": ["CARTAGENA", "MAGANGUÉ", "TURBACO", "CARMEN DE BOLÍVAR"],
-      "ATLÁNTICO": ["BARRANQUILLA", "SOLEDAD", "MALAMBO", "SABANALARGA"]
+      "CÃ“RDOBA": ["MONTERÃA", "AYAPEL", "BUENAVISTA", "CANALETE", "CERETÃ‰", "CHIMÃ", "CHINÃš", "CIÃ‰NAGA DE ORO", "COTORRA", "LA APARTADA", "LORICA", "LOS CÃ“RDOBAS", "MOMIL", "MOÃ‘ITOS", "MONTELÃBANO", "PLANETA RICA", "PUEBLO NUEVO", "PUERTO ESCONDIDO", "PUERTO LIBERTADOR", "PURÃSIMA", "SAHAGÃšN", "SAN ANDRÃ‰S DE SOTAVENTO", "SAN ANTERO", "SAN BERNARDO DEL VIENTO", "SAN CARLOS", "SAN JOSÃ‰ DE URÃ‰", "SAN PELAYO", "TIERRALTA", "TUCHÃN", "VALENCIA"],
+      "ANTIOQUIA": ["MEDELLÃN", "BELLO", "ITAGÃœÃ", "ENVIGADO", "APARTADÃ“", "CAUCASIA"],
+      "SUCRE": ["SINCELEJO", "COROZAL", "COVEÃ‘AS", "SAMPUÃ‰S", "TOLÃš"],
+      "BOLÃVAR": ["CARTAGENA", "MAGANGUÃ‰", "TURBACO", "CARMEN DE BOLÃVAR"],
+      "ATLÃNTICO": ["BARRANQUILLA", "SOLEDAD", "MALAMBO", "SABANALARGA"]
     };
 
     // URL del Webhook de Google Apps Script (A reemplazar)
-    // Se debe publicar como aplicación web, accesible a "Cualquiera"
+    // Se debe publicar como aplicaciÃ³n web, accesible a "Cualquiera"
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyP1EvqB_nt1oa7McPm13tCATjYTte1B_t2Ya_8P0FdQEGqd5GXqt9O514QiDgHyhP6g/exec';
 
     let currentUser = '';
@@ -540,7 +540,7 @@ function doLogin() {
     return;
   }
 
-  // Simulación si no hay URL configurada
+  // SimulaciÃ³n si no hay URL configurada
   if (SCRIPT_URL.includes('--reemplazar--')) {
     if (u === 'admin' && p === 'admin2026') {
       successLogin(u);
@@ -570,7 +570,7 @@ function doLogin() {
     .catch(e => {
       btn.textContent = 'Ingresar';
       btn.disabled = false;
-      err.textContent = 'Error de conexión. Verifica la URL.';
+      err.textContent = 'Error de conexiÃ³n. Verifica la URL.';
       err.style.display = 'block';
     });
 }
@@ -608,9 +608,15 @@ function successLogin(u) {
         opt.innerHTML = depto;
         deptoSelect.appendChild(opt);
       }
-      deptoSelect.value = "CÓRDOBA";
+      deptoSelect.value = "CÃ“RDOBA";
       loadMunicipios();
-      document.getElementById('municipio').value = "MONTERÍA";
+      document.getElementById('municipio').value = "MONTERÃA";
+      
+      // Restaurar el valor del Asesor despuÃ©s de que el formulario se limpia
+      const asesorInput = document.getElementById('inp-asesor');
+      if (asesorInput && currentUser) {
+        asesorInput.value = currentUser;
+      }
     }
 
     function loadMunicipios() {
@@ -650,9 +656,9 @@ function successLogin(u) {
         function (error) {
           setLoading(false);
           let msg = "Error al obtener GPS.";
-          if (error.code == 1) msg = "⚠️ Permiso de ubicación denegado.<br><br><b>Para solucionarlo:</b><br>1. Verifica que la app se abra por <b>HTTPS</b> (no funciona con file:// o http://)<br>2. En tu navegador, toca el ícono 🔒 en la barra de dirección<br>3. Activa el permiso de <b>Ubicación</b><br>4. Revisa que el GPS del teléfono esté encendido<br><br>Luego presiona Guardar de nuevo.";
-          if (error.code == 2) msg = "📡 Posición GPS no disponible. Verifica que el GPS de tu teléfono esté activado e intenta de nuevo.";
-          if (error.code == 3) msg = "⏱️ Tiempo de espera agotado para el GPS. Sal a un lugar abierto y presiona Guardar de nuevo.";
+          if (error.code == 1) msg = "âš ï¸ Permiso de ubicaciÃ³n denegado.<br><br><b>Para solucionarlo:</b><br>1. Verifica que la app se abra por <b>HTTPS</b> (no funciona con file:// o http://)<br>2. En tu navegador, toca el Ã­cono ðŸ”’ en la barra de direcciÃ³n<br>3. Activa el permiso de <b>UbicaciÃ³n</b><br>4. Revisa que el GPS del telÃ©fono estÃ© encendido<br><br>Luego presiona Guardar de nuevo.";
+          if (error.code == 2) msg = "ðŸ“¡ PosiciÃ³n GPS no disponible. Verifica que el GPS de tu telÃ©fono estÃ© activado e intenta de nuevo.";
+          if (error.code == 3) msg = "â±ï¸ Tiempo de espera agotado para el GPS. Sal a un lugar abierto y presiona Guardar de nuevo.";
           showError(msg);
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
@@ -680,7 +686,7 @@ function successLogin(u) {
       // Check if SCRIPT_URL is default/not set
       if (SCRIPT_URL.includes('--reemplazar--')) {
         setLoading(false);
-        showSuccess(`¡Simulación Exitosa! (Falta URL de Google Sheets)<br>GPS capturado: ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+        showSuccess(`Â¡SimulaciÃ³n Exitosa! (Falta URL de Google Sheets)<br>GPS capturado: ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
         document.getElementById('visita-form').reset();
         initForm();
         return;
@@ -694,13 +700,13 @@ function successLogin(u) {
       })
         .then(() => {
           setLoading(false);
-          showSuccess("Visita guardada exitosamente con ubicación GPS.");
+          showSuccess("Visita guardada exitosamente con ubicaciÃ³n GPS.");
           document.getElementById('visita-form').reset();
           initForm();
         })
         .catch(err => {
           setLoading(false);
-          showError("Error de conexión. Intente nuevamente.");
+          showError("Error de conexiÃ³n. Intente nuevamente.");
         });
     }
 
@@ -716,19 +722,19 @@ function successLogin(u) {
       } else {
         btn.disabled = false;
         spin.style.display = 'none';
-        txt.innerText = '💾 Guardar Visita y GPS';
+        txt.innerText = 'ðŸ’¾ Guardar Visita y GPS';
       }
     }
 
     function showError(msg) {
       const el = document.getElementById('msg-error');
-      el.innerHTML = '❌ ' + msg;
+      el.innerHTML = 'âŒ ' + msg;
       el.style.display = 'block';
     }
 
     function showSuccess(msg) {
       const el = document.getElementById('msg-success');
-      el.innerHTML = '✅ ' + msg;
+      el.innerHTML = 'âœ… ' + msg;
       el.style.display = 'block';
     }
 
