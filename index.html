@@ -1042,11 +1042,12 @@
         finishLogin();
       } else {
         btn.textContent = 'Sincronizando...'; btn.disabled = true;
-        fetch(SCRIPT_URL + '?action=getData')
+        fetch(SCRIPT_URL + '?action=getData&u=' + encodeURIComponent(u))
           .then(r => r.json()).then(d => {
             if (d.status === 'success') {
               saveClientes(d.clientes || []);
               saveProyectos(d.proyectos || []);
+              if (d.gestiones) { saveGestiones(d.gestiones); }
             }
             finishLogin();
           }).catch(() => {
@@ -1335,6 +1336,7 @@
       } else {
         calBtn.style.display = 'none';
       }
+
       document.getElementById('modal-success').classList.add('open');
     }
 
@@ -1360,35 +1362,58 @@
       let html = '';
       let lastLabel = '';
       gs.forEach(g => {
+        // Sanitizar fechas en caso de que vengan como strings ISO desde Google Sheets
+        let pureFecha = (g.fecha || '').toString();
+        if (pureFecha.includes('T')) pureFecha = pureFecha.split('T')[0];
+        
+        let pureHora = (g.hora || '').toString();
+        if (pureHora.includes('T')) {
+          const tDate = new Date(pureHora);
+          if (!isNaN(tDate)) {
+             pureHora = tDate.getHours().toString().padStart(2, '0') + ':' + tDate.getMinutes().toString().padStart(2, '0');
+          } else {
+             pureHora = pureHora.split('T')[1].substring(0,5);
+          }
+        } else if (pureHora && pureHora.length > 5) {
+             pureHora = pureHora.substring(0,5);
+        }
+
         let label = '', badgeClass = '';
-        if (g.fecha < today) { label = '⚠️ Vencidas'; badgeClass = 'badge-vencida'; }
-        else if (g.fecha === today) { label = '🔥 Hoy'; badgeClass = 'badge-hoy'; }
-        else if (g.fecha === tomorrow) { label = '📅 Mañana'; badgeClass = 'badge-proxima'; }
+        if (pureFecha < today) { label = '⚠️ Vencidas'; badgeClass = 'badge-vencida'; }
+        else if (pureFecha === today) { label = '🔥 Hoy'; badgeClass = 'badge-hoy'; }
+        else if (pureFecha === tomorrow) { label = '📅 Mañana'; badgeClass = 'badge-proxima'; }
         else { label = '🗓️ Próximas'; badgeClass = 'badge-proxima'; }
         if (label !== lastLabel) { html += `<div class="day-label">${label}</div>`; lastLabel = label; }
-        const d = g.fecha.split('-');
-        const horaStr = g.hora ? ` ${g.hora}` : '';
-        const fechaStr = `${d[2]}/${d[1]}/${d[0]}${horaStr}`;
+        
+        const d = pureFecha.split('-');
+        const horaStr = pureHora ? ` ${pureHora}` : '';
+        const fechaStr = (d.length === 3) ? `${d[2]}/${d[1]}/${d[0]}${horaStr}` : `${pureFecha}${horaStr}`;
         const txt = encodeURIComponent(`${g.tipo} — ${g.cliente} / ${g.proyecto}`);
         const det = encodeURIComponent(`Gestión: ${g.tipo}\n${g.descripcion || ''}\nCliente: ${g.cliente}\nProyecto: ${g.proyecto}\n📍 ${g.map_url || ''}`);
 
         let calDates = '';
-        if (g.hora) {
-          const df = g.fecha.replace(/-/g, '');
-          const h1 = g.hora.replace(':', '');
-          const std = new Date(`${g.fecha}T${g.hora}`);
-          std.setHours(std.getHours() + 1);
-          const h2 = std.getHours().toString().padStart(2, '0') + std.getMinutes().toString().padStart(2, '0');
-          const df2 = std.toISOString().split('T')[0].replace(/-/g, '');
-          calDates = `${df}T${h1}00/${df2}T${h2}00`;
+        if (pureHora) {
+          const df = pureFecha.replace(/-/g, '');
+          const h1 = pureHora.replace(':', '');
+          const std = new Date(`${pureFecha}T${pureHora}`);
+          if (!isNaN(std)) {
+            std.setHours(std.getHours() + 1);
+            const h2 = std.getHours().toString().padStart(2, '0') + std.getMinutes().toString().padStart(2, '0');
+            const df2 = std.toISOString().split('T')[0].replace(/-/g, '');
+            calDates = `${df}T${h1}00/${df2}T${h2}00`;
+          }
         } else {
-          const df = g.fecha.replace(/-/g, '');
-          const tom2 = new Date(g.fecha + 'T12:00:00'); tom2.setDate(tom2.getDate() + 1);
-          const df2 = tom2.toISOString().split('T')[0].replace(/-/g, '');
-          calDates = `${df}/${df2}`;
+          const df = pureFecha.replace(/-/g, '');
+          const tom2 = new Date(pureFecha + 'T12:00:00'); 
+          if (!isNaN(tom2)) {
+            tom2.setDate(tom2.getDate() + 1);
+            const df2 = tom2.toISOString().split('T')[0].replace(/-/g, '');
+            calDates = `${df}/${df2}`;
+          }
         }
         const srcParam = calendarId ? `&src=${encodeURIComponent(calendarId)}` : '';
         const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${txt}&dates=${calDates}&details=${det}${srcParam}`;
+
         html += `<div class="gest-card">
       <div class="gest-card-top"><span class="gest-tipo">${g.tipo}</span><span class="gest-fecha">${fechaStr}</span></div>
       <div class="gest-cliente">${g.cliente}</div>
