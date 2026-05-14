@@ -1,709 +1,1290 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control Visitas EC — Equipos Córdoba SAS</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0b0d12;--surface:#13161e;--surface2:#1a1f2b;--border:#232a38;--accent:#f5a623;--accent2:#e05a00;--accent3:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--purple:#a855f7;--teal:#14b8a6;--text:#e8edf5;--muted:#8892a4;--radius:12px;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(245,166,35,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
-#login-screen{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;}
-.login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;position:relative;z-index:1;}
-.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:20px 20px 0 0;}
-.login-logo{text-align:center;margin-bottom:32px;}
-.login-logo-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;}
-.login-logo h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
-.login-logo h2 span{color:var(--accent);}
-.login-logo p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;}
-.login-field{margin-bottom:16px;}
-.login-field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
-.login-field input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
-.login-field input:focus{border-color:var(--accent);}
-.login-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;transition:opacity .2s;}
-.login-btn:hover{opacity:.85;}
-.login-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red);border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;display:none;}
-header{position:sticky;top:0;z-index:100;background:rgba(11,13,18,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.logo-text h1{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;line-height:1.2;}
-.logo-text h1 span{color:var(--accent);}
-.logo-text p{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
-.tabs-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;position:relative;z-index:1;}
-.tab-btn{padding:12px 18px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;transition:all .2s;}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
-.tab-btn:hover{color:var(--text);}
-main{padding:20px 20px 60px;position:relative;z-index:1;max-width:760px;margin:0 auto;}
-.section{display:none;}.section.active{display:block;}
-.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
-.form-section-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
-.fg label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:600;}
-.fg input,.fg select,.fg textarea{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);}
-.fg textarea{resize:vertical;min-height:90px;}
-.fg input[readonly]{color:var(--muted);cursor:default;}
-.fg select option{background:var(--surface2);}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.autocomplete-wrap{position:relative;}
-.autocomplete-drop{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--surface2);border:1px solid var(--accent);border-radius:8px;max-height:200px;overflow-y:auto;z-index:200;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5);}
-.autocomplete-drop.open{display:block;}
-.autocomplete-item{padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .12s;}
-.autocomplete-item:last-child{border-bottom:none;}
-.autocomplete-item:hover{background:var(--surface);}
-.autocomplete-item strong{display:block;color:var(--text);}
-.autocomplete-item span{font-size:11px;color:var(--muted);}
-.ac-actions{display:flex;gap:8px;margin-top:6px;}
-.btn-sm{padding:7px 14px;border-radius:7px;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;transition:all .2s;}
-.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;}
-.btn-ghost{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
-.btn-green{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);}
-.client-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);padding:5px 12px;border-radius:20px;font-size:12px;color:var(--accent);margin-bottom:10px;display:none;}
-.client-badge button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0;}
-.client-badge button:hover{color:var(--red);}
-.radio-group{display:flex;gap:12px;}
-.radio-opt{display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);transition:all .2s;flex:1;justify-content:center;}
-.radio-opt input[type=radio]{accent-color:var(--accent);width:16px;height:16px;}
-.radio-opt.selected{border-color:var(--accent);background:rgba(245,166,35,.08);}
-.radio-opt label{font-size:13px;font-weight:600;cursor:pointer;}
-.proxima-section{background:rgba(245,166,35,.04);border:1px solid rgba(245,166,35,.15);border-radius:var(--radius);padding:16px;margin-top:4px;display:none;}
-.proxima-section.visible{display:block;animation:fadeIn .3s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;padding:14px 20px;border-radius:10px;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;transition:all .2s;width:100%;display:flex;justify-content:center;align-items:center;gap:8px;}
-.btn-primary:hover{opacity:.85;transform:translateY(-1px);}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.alert{padding:11px 15px;border-radius:8px;font-size:13px;margin-top:14px;display:none;line-height:1.5;}
-.alert-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red);}
-.alert-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--green);}
-.alert-info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:var(--accent3);display:block;}
-.spinner{width:20px;height:20px;border:3px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:none;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;padding:20px;overflow-y:auto;backdrop-filter:blur(4px);align-items:center;justify-content:center;}
-.modal-overlay.open{display:flex;}
-.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:480px;animation:slideUp .25s ease;overflow:hidden;}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-.modal-head{background:var(--surface2);padding:16px 20px;border-bottom:1px solid var(--border);}
-.modal-head h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;}
-.modal-body{padding:20px;}
-.modal-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;}
-.cal-btn{display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:var(--accent3);border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s;flex:1;justify-content:center;}
-.cal-btn:hover{background:var(--accent3);color:#fff;}
-.gest-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;position:relative;transition:all .2s;}
-.gest-card:hover{border-color:rgba(245,166,35,.3);}
-.gest-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
-.gest-tipo{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(245,166,35,.15);color:var(--accent);border:1px solid rgba(245,166,35,.3);white-space:nowrap;}
-.gest-fecha{font-size:11px;color:var(--muted);}
-.gest-cliente{font-size:14px;font-weight:600;margin-bottom:2px;}
-.gest-proyecto{font-size:12px;color:var(--muted);margin-bottom:8px;}
-.gest-desc{font-size:12px;color:var(--text);opacity:.8;margin-bottom:10px;}
-.gest-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.badge-vencida{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
-.badge-hoy{background:rgba(245,166,35,.15);color:var(--accent);border:1px solid rgba(245,166,35,.3);}
-.badge-proxima{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);}
-.day-label{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:18px 0 8px;padding-left:4px;}
-.empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
-.empty-state .ico{font-size:40px;margin-bottom:12px;}
-.empty-state h3{font-family:'Syne',sans-serif;font-size:16px;color:var(--text);margin-bottom:6px;}
-@media(max-width:640px){header,main{padding-left:14px;padding-right:14px;}.form-grid{grid-template-columns:1fr;}.login-box{padding:32px 24px;}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control Visitas EC — Equipos Córdoba SAS</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --surface: #13161e;
+      --surface2: #1a1f2b;
+      --border: #232a38;
+      --accent: #f5a623;
+      --accent2: #e05a00;
+      --accent3: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --purple: #a855f7;
+      --teal: #14b8a6;
+      --text: #e8edf5;
+      --muted: #8892a4;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(245, 166, 35, .02) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 166, 35, .02) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 20px 20px 0 0;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+
+    .login-logo h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .login-logo h2 span {
+      color: var(--accent);
+    }
+
+    .login-logo p {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-top: 4px;
+    }
+
+    .login-field {
+      margin-bottom: 16px;
+    }
+
+    .login-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+
+    .login-field input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .login-field input:focus {
+      border-color: var(--accent);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity .2s;
+    }
+
+    .login-btn:hover {
+      opacity: .85;
+    }
+
+    .login-err {
+      background: rgba(239, 68, 68, .1);
+      border: 1px solid rgba(239, 68, 68, .3);
+      color: var(--red);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 13, 18, .94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .logo-text h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .logo-text h1 span {
+      color: var(--accent);
+    }
+
+    .logo-text p {
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .tabs-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      overflow-x: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tab-btn {
+      padding: 12px 18px;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      white-space: nowrap;
+      transition: all .2s;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    main {
+      padding: 20px 20px 60px;
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .form-section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+
+    .fg label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      font-weight: 600;
+    }
+
+    .fg input,
+    .fg select,
+    .fg textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+    }
+
+    .fg input:focus,
+    .fg select:focus,
+    .fg textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .fg textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .fg input[readonly] {
+      color: var(--muted);
+      cursor: default;
+    }
+
+    .fg select option {
+      background: var(--surface2);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .autocomplete-wrap {
+      position: relative;
+    }
+
+    .autocomplete-drop {
+      position: absolute;
+      top: calc(100% + 2px);
+      left: 0;
+      right: 0;
+      background: var(--surface2);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 200;
+      display: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
+    }
+
+    .autocomplete-drop.open {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      transition: background .12s;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover {
+      background: var(--surface);
+    }
+
+    .autocomplete-item strong {
+      display: block;
+      color: var(--text);
+    }
+
+    .autocomplete-item span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .ac-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .btn-sm {
+      padding: 7px 14px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      transition: all .2s;
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+    }
+
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .3);
+    }
+
+    .client-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 166, 35, .1);
+      border: 1px solid rgba(245, 166, 35, .3);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .client-badge button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+    }
+
+    .client-badge button:hover {
+      color: var(--red);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .radio-opt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      transition: all .2s;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .radio-opt input[type=radio] {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+
+    .radio-opt.selected {
+      border-color: var(--accent);
+      background: rgba(245, 166, 35, .08);
+    }
+
+    .radio-opt label {
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .proxima-section {
+      background: rgba(245, 166, 35, .04);
+      border: 1px solid rgba(245, 166, 35, .15);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .proxima-section.visible {
+      display: block;
+      animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      transition: all .2s;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      opacity: .85;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .alert {
+      padding: 11px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-top: 14px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, .1);
+      border: 1px solid rgba(239, 68, 68, .3);
+      color: var(--red);
+    }
+
+    .alert-success {
+      background: rgba(34, 197, 94, .1);
+      border: 1px solid rgba(34, 197, 94, .3);
+      color: var(--green);
+    }
+
+    .alert-info {
+      background: rgba(59, 130, 246, .1);
+      border: 1px solid rgba(59, 130, 246, .3);
+      color: var(--accent3);
+      display: block;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 0, 0, .2);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .8);
+      z-index: 400;
+      padding: 20px;
+      overflow-y: auto;
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      animation: slideUp .25s ease;
+      overflow: hidden;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-head {
+      background: var(--surface2);
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-head h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-foot {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cal-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      background: rgba(59, 130, 246, .15);
+      border: 1px solid rgba(59, 130, 246, .3);
+      color: var(--accent3);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all .2s;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .cal-btn:hover {
+      background: var(--accent3);
+      color: #fff;
+    }
+
+    .gest-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+      transition: all .2s;
+    }
+
+    .gest-card:hover {
+      border-color: rgba(245, 166, 35, .3);
+    }
+
+    .gest-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .gest-tipo {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(245, 166, 35, .15);
+      color: var(--accent);
+      border: 1px solid rgba(245, 166, 35, .3);
+      white-space: nowrap;
+    }
+
+    .gest-fecha {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .gest-cliente {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .gest-proyecto {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .gest-desc {
+      font-size: 12px;
+      color: var(--text);
+      opacity: .8;
+      margin-bottom: 10px;
+    }
+
+    .gest-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-vencida {
+      background: rgba(239, 68, 68, .15);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, .3);
+    }
+
+    .badge-hoy {
+      background: rgba(245, 166, 35, .15);
+      color: var(--accent);
+      border: 1px solid rgba(245, 166, 35, .3);
+    }
+
+    .badge-proxima {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .3);
+    }
+
+    .day-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin: 18px 0 8px;
+      padding-left: 4px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state .ico {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    @media(max-width:640px) {
+
+      header,
+      main {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .login-box {
+        padding: 32px 24px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">
-      <div class="login-logo-icon">👷</div>
-      <h2>Equipos Córdoba <span>SAS</span></h2>
-      <p>Control de Visitas</p>
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="login-logo-icon">👷</div>
+        <h2>Equipos Córdoba <span>SAS</span></h2>
+        <p>Control de Visitas</p>
+      </div>
+      <div class="login-err" id="login-err">Usuario o clave incorrectos</div>
+      <div class="login-field"><label>Usuario</label><input type="text" id="inp-user" placeholder="Ingrese usuario">
+      </div>
+      <div class="login-field"><label>Clave</label><input type="password" id="inp-pass" placeholder="Ingrese clave">
+      </div>
+      <button class="login-btn" onclick="doLogin()">🔐 Ingresar</button>
+      <p style="font-size:9px;color:var(--muted);text-align:center;margin-top:16px;">Todos los derechos reservados. 2026
+        · Equipos Córdoba SAS</p>
     </div>
-    <div class="login-err" id="login-err">Usuario o clave incorrectos</div>
-    <div class="login-field"><label>Usuario</label><input type="text" id="inp-user" placeholder="Ingrese usuario"></div>
-    <div class="login-field"><label>Clave</label><input type="password" id="inp-pass" placeholder="Ingrese clave"></div>
-    <button class="login-btn" onclick="doLogin()">🔐 Ingresar</button>
-    <p style="font-size:9px;color:var(--muted);text-align:center;margin-top:16px;">Todos los derechos reservados. 2026 · Equipos Córdoba SAS</p>
   </div>
-</div>
-<div id="app" style="display:none;">
-  <header>
-    <div class="logo">
-      <div class="logo-icon">👷</div>
-      <div class="logo-text"><h1>Equipos Córdoba <span>SAS</span></h1><p>Control de Visitas</p></div>
+  <div id="app" style="display:none;">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">👷</div>
+        <div class="logo-text">
+          <h1>Equipos Córdoba <span>SAS</span></h1>
+          <p>Control de Visitas</p>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:12px;">
+        <span id="user-display"></span>
+        <a href="#" onclick="logout()" style="color:var(--accent);text-decoration:none;font-size:12px;">Salir</a>
+      </div>
+    </header>
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('nueva',this)" id="tab-nueva">📋 Nueva Visita</button>
+      <button class="tab-btn" onclick="switchTab('gestiones',this)" id="tab-gestiones">📅 Mis Gestiones <span
+          id="gest-count"
+          style="background:var(--accent);color:#000;border-radius:10px;padding:1px 7px;font-size:9px;margin-left:4px;display:none;"></span></button>
     </div>
-    <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:12px;">
-      <span id="user-display"></span>
-      <a href="#" onclick="logout()" style="color:var(--accent);text-decoration:none;font-size:12px;">Salir</a>
-    </div>
-  </header>
-  <div class="tabs-bar">
-    <button class="tab-btn active" onclick="switchTab('nueva',this)" id="tab-nueva">📋 Nueva Visita</button>
-    <button class="tab-btn" onclick="switchTab('gestiones',this)" id="tab-gestiones">📅 Mis Gestiones <span id="gest-count" style="background:var(--accent);color:#000;border-radius:10px;padding:1px 7px;font-size:9px;margin-left:4px;display:none;"></span></button>
-  </div>
-  <main>
-    <div id="sec-nueva" class="section active">
-      <form id="visita-form">
-        <div class="form-card">
-          <div class="form-section-title">🏷️ Tipo de Visita</div>
-          <div class="fg">
-            <label>Tipo de Visita *</label>
-            <select id="tipo_visita" required>
-              <option value="">Seleccione...</option>
-              <option value="INICIAL OBRA">INICIAL OBRA</option>
-              <option value="SEGUIMIENTO">SEGUIMIENTO</option>
-              <option value="OFICINA CLIENTE">OFICINA CLIENTE</option>
-              <option value="COBRO">COBRO</option>
-              <option value="ASESORIA">ASESORÍA</option>
-            </select>
-          </div>
-          <div class="fg"><label>Asesor</label><input type="text" id="inp-asesor" readonly></div>
-        </div>
-        <div class="form-card">
-          <div class="form-section-title">👤 Datos del Cliente</div>
-          <div class="fg">
-            <label>Nombre Cliente *</label>
-            <div class="autocomplete-wrap">
-              <input type="text" id="cliente" required placeholder="Buscar o escribir nuevo cliente..." autocomplete="off" oninput="searchClientes(this.value)" onfocus="searchClientes(this.value)">
-              <div class="autocomplete-drop" id="drop-clientes"></div>
-            </div>
-            <div class="ac-actions">
-              <button type="button" class="btn-sm btn-ghost" onclick="nuevoCliente()">+ Nuevo Cliente</button>
-              <span class="client-badge" id="badge-cliente"><span id="badge-cliente-txt"></span><button onclick="clearCliente()">×</button></span>
-            </div>
-          </div>
-          <div class="form-grid">
-            <div class="fg"><label>CC / NIT</label><input type="text" id="cc_nit" placeholder="Opcional"></div>
-            <div class="fg"><label>Tel. Cliente</label><input type="tel" id="tel_cliente" placeholder="Opcional"></div>
-          </div>
-          <div class="fg"><label>Dirección Cliente</label><input type="text" id="dir_cliente" placeholder="Opcional"></div>
-        </div>
-        <div class="form-card">
-          <div class="form-section-title">🏗️ Proyecto / Obra</div>
-          <div class="fg">
-            <label>Nombre Proyecto / Obra *</label>
-            <div class="autocomplete-wrap">
-              <input type="text" id="proyecto" required placeholder="Buscar o escribir nuevo proyecto..." autocomplete="off" oninput="searchProyectos(this.value)" onfocus="searchProyectos(this.value)">
-              <div class="autocomplete-drop" id="drop-proyectos"></div>
-            </div>
-            <div class="ac-actions">
-              <button type="button" class="btn-sm btn-ghost" onclick="nuevoProyecto()">+ Nueva Obra</button>
-              <span class="client-badge" id="badge-proyecto"><span id="badge-proyecto-txt"></span><button onclick="clearProyecto()">×</button></span>
-            </div>
-          </div>
-          <div class="fg"><label>Dirección Proyecto *</label><input type="text" id="dir_proyecto" required placeholder="Dirección de la obra"></div>
-          <div class="form-grid">
-            <div class="fg"><label>Departamento *</label><select id="departamento" required onchange="loadMunicipios()"></select></div>
-            <div class="fg"><label>Municipio *</label><select id="municipio" required></select></div>
-          </div>
-          <div class="form-grid">
-            <div class="fg"><label>Nombre Contacto</label><input type="text" id="contacto" placeholder="Opcional"></div>
-            <div class="fg"><label>Tel. Contacto</label><input type="tel" id="tel_contacto" placeholder="Opcional"></div>
-          </div>
-        </div>
-        <div class="form-card">
-          <div class="form-section-title">📝 Observaciones</div>
-          <div class="fg"><label>Observaciones de la Visita</label><textarea id="observaciones" placeholder="Describe lo que se trató en la visita..."></textarea></div>
-        </div>
-        <div class="form-card">
-          <div class="form-section-title">📅 Próxima Gestión</div>
-          <div class="fg">
-            <label>¿Hay Próxima Gestión?</label>
-            <div class="radio-group">
-              <div class="radio-opt" id="opt-si" onclick="toggleProxima('si')"><input type="radio" name="hay_proxima" id="rad-si" value="SI"><label for="rad-si">✅ Sí</label></div>
-              <div class="radio-opt" id="opt-no" onclick="toggleProxima('no')"><input type="radio" name="hay_proxima" id="rad-no" value="NO" checked><label for="rad-no">❌ No</label></div>
-            </div>
-          </div>
-          <div class="proxima-section" id="proxima-section">
-            <div class="form-grid">
-              <div class="fg"><label>Fecha Próxima Gestión *</label><input type="date" id="fecha_proxima"></div>
-              <div class="fg"><label>Hora Próxima</label><input type="time" id="hora_proxima"></div>
-            </div>
-            <div class="fg"><label>Tipo de Gestión *</label>
-              <select id="proxima_gestion">
+    <main>
+      <div id="sec-nueva" class="section active">
+        <form id="visita-form">
+          <div class="form-card">
+            <div class="form-section-title">🏷️ Tipo de Visita</div>
+            <div class="fg">
+              <label>Tipo de Visita *</label>
+              <select id="tipo_visita" required>
                 <option value="">Seleccione...</option>
-                <option value="Visitar Obra">🏗️ Visitar Obra</option>
-                <option value="Visitar Oficina">🏢 Visitar Oficina</option>
-                <option value="Llamar a Cliente">📞 Llamar a Cliente</option>
-                <option value="Enviar correo">✉️ Enviar Correo</option>
-                <option value="Mensaje de WhatsApp">💬 Mensaje de WhatsApp</option>
+                <option value="INICIAL OBRA">INICIAL OBRA</option>
+                <option value="SEGUIMIENTO">SEGUIMIENTO</option>
+                <option value="OFICINA CLIENTE">OFICINA CLIENTE</option>
+                <option value="COBRO">COBRO</option>
+                <option value="ASESORIA">ASESORÍA</option>
               </select>
             </div>
-            <div class="fg"><label>Descripción de la Gestión</label><textarea id="desc_gestion" placeholder="¿Qué se debe hacer en la próxima gestión?"></textarea></div>
+            <div class="fg"><label>Asesor</label><input type="text" id="inp-asesor" readonly></div>
           </div>
-        </div>
-        <div class="form-card" style="padding:14px;">
-          <div class="alert alert-info" id="gps-status">📍 La ubicación GPS se capturará automáticamente al guardar.</div>
-          <div class="alert alert-error" id="msg-error"></div>
-          <div class="alert alert-success" id="msg-success"></div>
-          <button type="submit" class="btn-primary" id="btn-submit" style="margin-top:12px;">
-            <div class="spinner" id="submit-spinner"></div>
-            <span id="submit-text">💾 Guardar Visita y GPS</span>
-          </button>
-        </div>
-      </form>
-    </div>
-    <div id="sec-gestiones" class="section">
-      <div id="gestiones-list"></div>
-    </div>
-  </main>
-</div>
-<div class="modal-overlay" id="modal-success">
-  <div class="modal-box">
-    <div class="modal-head"><h3>✅ Visita Guardada</h3></div>
-    <div class="modal-body" id="modal-body-content"></div>
-    <div class="modal-foot">
-      <a href="#" id="cal-link" class="cal-btn" target="_blank">📅 Agregar a Google Calendar</a>
-      <button class="btn-sm btn-ghost" style="flex:1;" onclick="closeModal()">Cerrar</button>
+          <div class="form-card">
+            <div class="form-section-title">👤 Datos del Cliente</div>
+            <div class="fg">
+              <label>Nombre Cliente *</label>
+              <div class="autocomplete-wrap">
+                <input type="text" id="cliente" required placeholder="Buscar o escribir nuevo cliente..."
+                  autocomplete="off" oninput="searchClientes(this.value)" onfocus="searchClientes(this.value)">
+                <div class="autocomplete-drop" id="drop-clientes"></div>
+              </div>
+              <div class="ac-actions">
+                <button type="button" class="btn-sm btn-ghost" onclick="nuevoCliente()">+ Nuevo Cliente</button>
+                <span class="client-badge" id="badge-cliente"><span id="badge-cliente-txt"></span><button
+                    onclick="clearCliente()">×</button></span>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label>CC / NIT</label><input type="text" id="cc_nit" placeholder="Opcional"></div>
+              <div class="fg"><label>Tel. Cliente</label><input type="tel" id="tel_cliente" placeholder="Opcional">
+              </div>
+            </div>
+            <div class="fg"><label>Dirección Cliente</label><input type="text" id="dir_cliente" placeholder="Opcional">
+            </div>
+          </div>
+          <div class="form-card">
+            <div class="form-section-title">🏗️ Proyecto / Obra</div>
+            <div class="fg">
+              <label>Nombre Proyecto / Obra *</label>
+              <div class="autocomplete-wrap">
+                <input type="text" id="proyecto" required placeholder="Buscar o escribir nuevo proyecto..."
+                  autocomplete="off" oninput="searchProyectos(this.value)" onfocus="searchProyectos(this.value)">
+                <div class="autocomplete-drop" id="drop-proyectos"></div>
+              </div>
+              <div class="ac-actions">
+                <button type="button" class="btn-sm btn-ghost" onclick="nuevoProyecto()">+ Nueva Obra</button>
+                <span class="client-badge" id="badge-proyecto"><span id="badge-proyecto-txt"></span><button
+                    onclick="clearProyecto()">×</button></span>
+              </div>
+            </div>
+            <div class="fg"><label>Dirección Proyecto *</label><input type="text" id="dir_proyecto" required
+                placeholder="Dirección de la obra"></div>
+            <div class="form-grid">
+              <div class="fg"><label>Departamento *</label><select id="departamento" required
+                  onchange="loadMunicipios()"></select></div>
+              <div class="fg"><label>Municipio *</label><select id="municipio" required></select></div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label>Nombre Contacto</label><input type="text" id="contacto" placeholder="Opcional">
+              </div>
+              <div class="fg"><label>Tel. Contacto</label><input type="tel" id="tel_contacto" placeholder="Opcional">
+              </div>
+            </div>
+          </div>
+          <div class="form-card">
+            <div class="form-section-title">📝 Observaciones</div>
+            <div class="fg"><label>Observaciones de la Visita</label><textarea id="observaciones"
+                placeholder="Describe lo que se trató en la visita..."></textarea></div>
+          </div>
+          <div class="form-card">
+            <div class="form-section-title">📅 Próxima Gestión</div>
+            <div class="fg">
+              <label>¿Hay Próxima Gestión?</label>
+              <div class="radio-group">
+                <div class="radio-opt" id="opt-si" onclick="toggleProxima('si')"><input type="radio" name="hay_proxima"
+                    id="rad-si" value="SI"><label for="rad-si">✅ Sí</label></div>
+                <div class="radio-opt" id="opt-no" onclick="toggleProxima('no')"><input type="radio" name="hay_proxima"
+                    id="rad-no" value="NO" checked><label for="rad-no">❌ No</label></div>
+              </div>
+            </div>
+            <div class="proxima-section" id="proxima-section">
+              <div class="form-grid">
+                <div class="fg"><label>Fecha Próxima Gestión *</label><input type="date" id="fecha_proxima"></div>
+                <div class="fg"><label>Hora Próxima</label><input type="time" id="hora_proxima"></div>
+              </div>
+              <div class="fg"><label>Tipo de Gestión *</label>
+                <select id="proxima_gestion">
+                  <option value="">Seleccione...</option>
+                  <option value="Visitar Obra">🏗️ Visitar Obra</option>
+                  <option value="Visitar Oficina">🏢 Visitar Oficina</option>
+                  <option value="Llamar a Cliente">📞 Llamar a Cliente</option>
+                  <option value="Enviar correo">✉️ Enviar Correo</option>
+                  <option value="Mensaje de WhatsApp">💬 Mensaje de WhatsApp</option>
+                </select>
+              </div>
+              <div class="fg"><label>Descripción de la Gestión</label><textarea id="desc_gestion"
+                  placeholder="¿Qué se debe hacer en la próxima gestión?"></textarea></div>
+            </div>
+          </div>
+          <div class="form-card" style="padding:14px;">
+            <div class="alert alert-info" id="gps-status">📍 La ubicación GPS se capturará automáticamente al guardar.
+            </div>
+            <div class="alert alert-error" id="msg-error"></div>
+            <div class="alert alert-success" id="msg-success"></div>
+            <button type="submit" class="btn-primary" id="btn-submit" style="margin-top:12px;">
+              <div class="spinner" id="submit-spinner"></div>
+              <span id="submit-text">💾 Guardar Visita y GPS</span>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div id="sec-gestiones" class="section">
+        <div id="gestiones-list"></div>
+      </div>
+    </main>
+  </div>
+  <div class="modal-overlay" id="modal-success">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>✅ Visita Guardada</h3>
+      </div>
+      <div class="modal-body" id="modal-body-content"></div>
+      <div class="modal-foot">
+        <a href="#" id="cal-link" class="cal-btn" target="_blank">📅 Agregar a Google Calendar</a>
+        <button class="btn-sm btn-ghost" style="flex:1;" onclick="closeModal()">Cerrar</button>
+      </div>
     </div>
   </div>
-</div>
-<script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw3GRZ74TzpixzDe95mqhSjGmJFSmM161e1qXkYnA4LHIqUB1Kw5ebRRCdtGF7RYXaxEA/exec';
-const colombia={"AMAZONAS":["LETICIA","PUERTO NARIÑO"],"ANTIOQUIA":["MEDELLÍN","APARTADÓ","BARBOSA","BELLO","CALDAS","CAUCASIA","CHIGORODÓ","COPACABANA","ENVIGADO","GIRARDOTA","ITAGÜÍ","RIONEGRO","SABANETA","TURBO"],"ARAUCA":["ARAUCA","ARAUQUITA","FORTUL","SARAVENA","TAME"],"ATLÁNTICO":["BARRANQUILLA","BARANOA","GALAPA","MALAMBO","SABANALARGA","SOLEDAD","PUERTO COLOMBIA"],"BOGOTÁ D.C.":["BOGOTÁ D.C."],"BOLÍVAR":["CARTAGENA","EL CARMEN DE BOLÍVAR","MAGANGUÉ","MOMPÓS","TURBACO","ZAMBRANO"],"BOYACÁ":["TUNJA","CHIQUINQUIRÁ","DUITAMA","PAIPA","SOGAMOSO","VILLA DE LEYVA"],"CALDAS":["MANIZALES","ANSERMA","CHINCHINÁ","LA DORADA","RIOSUCIO","VILLAMARÍA"],"CAQUETÁ":["FLORENCIA","EL DONCELLO","EL PAUJIL","SAN VICENTE DEL CAGUÁN"],"CASANARE":["YOPAL","AGUAZUL","MONTERREY","PAZ DE ARIPORO","TAURAMENA","VILLANUEVA"],"CAUCA":["POPAYÁN","MIRANDA","PUERTO TEJADA","SANTANDER DE QUILICHAO"],"CESAR":["VALLEDUPAR","AGUACHICA","AGUSTÍN CODAZZI","BOSCONIA","CHIRIGUANÁ"],"CHOCÓ":["QUIBDÓ","BAHÍA SOLANO","ISTMINA","NUQUÍ","RIOSUCIO","TADÓ"],"CÓRDOBA":["MONTERÍA","AYAPEL","BUENAVISTA","CANALETE","CERETÉ","CHIMÁ","CHINÚ","CIÉNAGA DE ORO","COTORRA","LA APARTADA","LORICA","LOS CÓRDOBAS","MOMIL","MOÑITOS","MONTELÍBANO","PLANETA RICA","PUEBLO NUEVO","PUERTO ESCONDIDO","PUERTO LIBERTADOR","PURÍSIMA DE LA CONCEPCIÓN","SAHAGÚN","SAN ANDRÉS DE SOTAVENTO","SAN ANTERO","SAN BERNARDO DEL VIENTO","SAN CARLOS","SAN JOSÉ DE URÉ","SAN PELAYO","TIERRALTA","TUCHÍN","VALENCIA"],"CUNDINAMARCA":["BOGOTÁ","CAJICÁ","CHÍA","FACATATIVÁ","FUSAGASUGÁ","GIRARDOT","LA MESA","MADRID","MOSQUERA","SOACHA","SOPÓ","ZIPAQUIRÁ"],"GUAINÍA":["INÍRIDA"],"GUAVIARE":["SAN JOSÉ DEL GUAVIARE","CALAMAR","EL RETORNO","MIRAFLORES"],"HUILA":["NEIVA","GARZÓN","LA PLATA","PITALITO","SAN AGUSTÍN"],"LA GUAJIRA":["RIOHACHA","MAICAO","MANAURE","URIBIA","VILLANUEVA"],"MAGDALENA":["SANTA MARTA","CIÉNAGA","EL BANCO","FUNDACIÓN","PLATO"],"META":["VILLAVICENCIO","ACACÍAS","GRANADA","PUERTO GAITÁN","PUERTO LÓPEZ","SAN MARTÍN"],"NARIÑO":["PASTO","IPIALES","TUMACO","TÚQUERRES"],"NORTE DE SANTANDER":["CÚCUTA","OCAÑA","PAMPLONA","VILLA DEL ROSARIO","LOS PATIOS"],"PUTUMAYO":["MOCOA","ORITO","PUERTO ASÍS","SIBUNDOY","VALLE DEL GUAMUEZ"],"QUINDÍO":["ARMENIA","CALARCÁ","LA TEBAIDA","MONTENEGRO","QUIMBAYA"],"RISARALDA":["PEREIRA","DOSQUEBRADAS","LA VIRGINIA","SANTA ROSA DE CABAL"],"SAN ANDRÉS Y PROVIDENCIA":["SAN ANDRÉS","PROVIDENCIA"],"SANTANDER":["BUCARAMANGA","BARRANCABERMEJA","FLORIDABLANCA","GIRÓN","PIEDECUESTA","SAN GIL"],"SUCRE":["SINCELEJO","COROZAL","COVEÑAS","MORROA","SAMPUÉS","SAN MARCOS","TOLÚ"],"TOLIMA":["IBAGUÉ","CHAPARRAL","ESPINAL","HONDA","LÍBANO","MELGAR"],"VALLE DEL CAUCA":["CALI","BUGA","BUENAVENTURA","CARTAGO","PALMIRA","TULÚA","YUMBO"],"VAUPÉS":["MITÚ"],"VICHADA":["PUERTO CARREÑO"]};
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3GRZ74TzpixzDe95mqhSjGmJFSmM161e1qXkYnA4LHIqUB1Kw5ebRRCdtGF7RYXaxEA/exec';
+    const colombia = { "AMAZONAS": ["LETICIA", "PUERTO NARIÑO"], "ANTIOQUIA": ["MEDELLÍN", "APARTADÓ", "BARBOSA", "BELLO", "CALDAS", "CAUCASIA", "CHIGORODÓ", "COPACABANA", "ENVIGADO", "GIRARDOTA", "ITAGÜÍ", "RIONEGRO", "SABANETA", "TURBO"], "ARAUCA": ["ARAUCA", "ARAUQUITA", "FORTUL", "SARAVENA", "TAME"], "ATLÁNTICO": ["BARRANQUILLA", "BARANOA", "GALAPA", "MALAMBO", "SABANALARGA", "SOLEDAD", "PUERTO COLOMBIA"], "BOGOTÁ D.C.": ["BOGOTÁ D.C."], "BOLÍVAR": ["CARTAGENA", "EL CARMEN DE BOLÍVAR", "MAGANGUÉ", "MOMPÓS", "TURBACO", "ZAMBRANO"], "BOYACÁ": ["TUNJA", "CHIQUINQUIRÁ", "DUITAMA", "PAIPA", "SOGAMOSO", "VILLA DE LEYVA"], "CALDAS": ["MANIZALES", "ANSERMA", "CHINCHINÁ", "LA DORADA", "RIOSUCIO", "VILLAMARÍA"], "CAQUETÁ": ["FLORENCIA", "EL DONCELLO", "EL PAUJIL", "SAN VICENTE DEL CAGUÁN"], "CASANARE": ["YOPAL", "AGUAZUL", "MONTERREY", "PAZ DE ARIPORO", "TAURAMENA", "VILLANUEVA"], "CAUCA": ["POPAYÁN", "MIRANDA", "PUERTO TEJADA", "SANTANDER DE QUILICHAO"], "CESAR": ["VALLEDUPAR", "AGUACHICA", "AGUSTÍN CODAZZI", "BOSCONIA", "CHIRIGUANÁ"], "CHOCÓ": ["QUIBDÓ", "BAHÍA SOLANO", "ISTMINA", "NUQUÍ", "RIOSUCIO", "TADÓ"], "CÓRDOBA": ["MONTERÍA", "AYAPEL", "BUENAVISTA", "CANALETE", "CERETÉ", "CHIMÁ", "CHINÚ", "CIÉNAGA DE ORO", "COTORRA", "LA APARTADA", "LORICA", "LOS CÓRDOBAS", "MOMIL", "MOÑITOS", "MONTELÍBANO", "PLANETA RICA", "PUEBLO NUEVO", "PUERTO ESCONDIDO", "PUERTO LIBERTADOR", "PURÍSIMA DE LA CONCEPCIÓN", "SAHAGÚN", "SAN ANDRÉS DE SOTAVENTO", "SAN ANTERO", "SAN BERNARDO DEL VIENTO", "SAN CARLOS", "SAN JOSÉ DE URÉ", "SAN PELAYO", "TIERRALTA", "TUCHÍN", "VALENCIA"], "CUNDINAMARCA": ["BOGOTÁ", "CAJICÁ", "CHÍA", "FACATATIVÁ", "FUSAGASUGÁ", "GIRARDOT", "LA MESA", "MADRID", "MOSQUERA", "SOACHA", "SOPÓ", "ZIPAQUIRÁ"], "GUAINÍA": ["INÍRIDA"], "GUAVIARE": ["SAN JOSÉ DEL GUAVIARE", "CALAMAR", "EL RETORNO", "MIRAFLORES"], "HUILA": ["NEIVA", "GARZÓN", "LA PLATA", "PITALITO", "SAN AGUSTÍN"], "LA GUAJIRA": ["RIOHACHA", "MAICAO", "MANAURE", "URIBIA", "VILLANUEVA"], "MAGDALENA": ["SANTA MARTA", "CIÉNAGA", "EL BANCO", "FUNDACIÓN", "PLATO"], "META": ["VILLAVICENCIO", "ACACÍAS", "GRANADA", "PUERTO GAITÁN", "PUERTO LÓPEZ", "SAN MARTÍN"], "NARIÑO": ["PASTO", "IPIALES", "TUMACO", "TÚQUERRES"], "NORTE DE SANTANDER": ["CÚCUTA", "OCAÑA", "PAMPLONA", "VILLA DEL ROSARIO", "LOS PATIOS"], "PUTUMAYO": ["MOCOA", "ORITO", "PUERTO ASÍS", "SIBUNDOY", "VALLE DEL GUAMUEZ"], "QUINDÍO": ["ARMENIA", "CALARCÁ", "LA TEBAIDA", "MONTENEGRO", "QUIMBAYA"], "RISARALDA": ["PEREIRA", "DOSQUEBRADAS", "LA VIRGINIA", "SANTA ROSA DE CABAL"], "SAN ANDRÉS Y PROVIDENCIA": ["SAN ANDRÉS", "PROVIDENCIA"], "SANTANDER": ["BUCARAMANGA", "BARRANCABERMEJA", "FLORIDABLANCA", "GIRÓN", "PIEDECUESTA", "SAN GIL"], "SUCRE": ["SINCELEJO", "COROZAL", "COVEÑAS", "MORROA", "SAMPUÉS", "SAN MARCOS", "TOLÚ"], "TOLIMA": ["IBAGUÉ", "CHAPARRAL", "ESPINAL", "HONDA", "LÍBANO", "MELGAR"], "VALLE DEL CAUCA": ["CALI", "BUGA", "BUENAVENTURA", "CARTAGO", "PALMIRA", "TULÚA", "YUMBO"], "VAUPÉS": ["MITÚ"], "VICHADA": ["PUERTO CARREÑO"] };
 
-let currentUser='',selectedClienteId=null,selectedProyectoId=null,hayProxima=false;
+    let currentUser = '', calendarId = '', selectedClienteId = null, selectedProyectoId = null, hayProxima = false;
 
-function getClientes(){try{return JSON.parse(localStorage.getItem('ec_clientes'))||[];}catch(e){return[];}}
-function saveClientes(arr){localStorage.setItem('ec_clientes',JSON.stringify(arr));}
-function getProyectos(){try{return JSON.parse(localStorage.getItem('ec_proyectos'))||[];}catch(e){return[];}}
-function saveProyectos(arr){localStorage.setItem('ec_proyectos',JSON.stringify(arr));}
-function getGestiones(){try{return JSON.parse(localStorage.getItem('ec_gestiones'))||[];}catch(e){return[];}}
-function saveGestiones(arr){localStorage.setItem('ec_gestiones',JSON.stringify(arr));}
-function genId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5);}
+    function getClientes() { try { return JSON.parse(localStorage.getItem('ec_clientes')) || []; } catch (e) { return []; } }
+    function saveClientes(arr) { localStorage.setItem('ec_clientes', JSON.stringify(arr)); }
+    function getProyectos() { try { return JSON.parse(localStorage.getItem('ec_proyectos')) || []; } catch (e) { return []; } }
+    function saveProyectos(arr) { localStorage.setItem('ec_proyectos', JSON.stringify(arr)); }
+    function getGestiones() { try { return JSON.parse(localStorage.getItem('ec_gestiones')) || []; } catch (e) { return []; } }
+    function saveGestiones(arr) { localStorage.setItem('ec_gestiones', JSON.stringify(arr)); }
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
 
-function doLogin(){
-  const u=document.getElementById('inp-user').value.trim();
-  const p=document.getElementById('inp-pass').value.trim();
-  const btn=document.querySelector('.login-btn');
-  const err=document.getElementById('login-err');
-  if(!u||!p){err.textContent='Ingresa usuario y clave';err.style.display='block';return;}
-  if(SCRIPT_URL.includes('--reemplazar--')){
-    if(u==='admin'&&p==='admin2026')successLogin(u);
-    else{err.textContent='Usuario/clave incorrectos';err.style.display='block';}
-    return;
-  }
-  btn.textContent='Verificando...';btn.disabled=true;err.style.display='none';
-  fetch(SCRIPT_URL+'?action=login&u='+encodeURIComponent(u)+'&p='+encodeURIComponent(p))
-    .then(r=>r.json()).then(d=>{
-      btn.textContent='🔐 Ingresar';btn.disabled=false;
-      if(d.status==='success')successLogin(u);
-      else{err.textContent='Usuario o clave incorrectos';err.style.display='block';}
-    }).catch(()=>{
-      btn.textContent='🔐 Ingresar';btn.disabled=false;
-      err.textContent='Error de conexión';err.style.display='block';
-    });
-}
+    function doLogin() {
+      const u = document.getElementById('inp-user').value.trim();
+      const p = document.getElementById('inp-pass').value.trim();
+      const btn = document.querySelector('.login-btn');
+      const err = document.getElementById('login-err');
+      if (!u || !p) { err.textContent = 'Ingresa usuario y clave'; err.style.display = 'block'; return; }
+      if (SCRIPT_URL.includes('--reemplazar--')) {
+        if (u === 'admin' && p === 'admin2026') successLogin(u);
+        else { err.textContent = 'Usuario/clave incorrectos'; err.style.display = 'block'; }
+        return;
+      }
+      btn.textContent = 'Verificando...'; btn.disabled = true; err.style.display = 'none';
+      fetch(SCRIPT_URL + '?action=login&u=' + encodeURIComponent(u) + '&p=' + encodeURIComponent(p))
+        .then(r => r.json()).then(d => {
+          btn.textContent = '🔐 Ingresar'; btn.disabled = false;
+          if (d.status === 'success') successLogin(u, d.calendar_id);
+          else { err.textContent = 'Usuario o clave incorrectos'; err.style.display = 'block'; }
+        }).catch(() => {
+          btn.textContent = '🔐 Ingresar'; btn.disabled = false;
+          err.textContent = 'Error de conexión'; err.style.display = 'block';
+        });
+    }
 
-function successLogin(u){
-  currentUser=u;
-  const btn=document.querySelector('.login-btn');
-  if(SCRIPT_URL.includes('--reemplazar--')) {
-    finishLogin();
-  } else {
-    btn.textContent='Sincronizando...';btn.disabled=true;
-    fetch(SCRIPT_URL+'?action=getData')
-      .then(r=>r.json()).then(d=>{
-        if(d.status==='success'){
-          saveClientes(d.clientes||[]);
-          saveProyectos(d.proyectos||[]);
-        }
+    function successLogin(u, calId = '') {
+      currentUser = u;
+      calendarId = calId;
+      const btn = document.querySelector('.login-btn');
+      if (SCRIPT_URL.includes('--reemplazar--')) {
         finishLogin();
-      }).catch(()=>{
-        finishLogin();
+      } else {
+        btn.textContent = 'Sincronizando...'; btn.disabled = true;
+        fetch(SCRIPT_URL + '?action=getData')
+          .then(r => r.json()).then(d => {
+            if (d.status === 'success') {
+              saveClientes(d.clientes || []);
+              saveProyectos(d.proyectos || []);
+            }
+            finishLogin();
+          }).catch(() => {
+            finishLogin();
+          });
+      }
+    }
+
+    function finishLogin() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('user-display').innerText = currentUser;
+      document.getElementById('inp-asesor').value = currentUser;
+      initForm();
+      updateGestCount();
+    }
+    function logout() {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('inp-pass').value = '';
+      const btn = document.querySelector('.login-btn');
+      btn.textContent = '🔐 Ingresar';
+      btn.disabled = false;
+    }
+
+    function initForm() {
+      const sel = document.getElementById('departamento');
+      sel.innerHTML = '';
+      Object.keys(colombia).sort().forEach(d => {
+        const o = document.createElement('option'); o.value = d; o.textContent = d; sel.appendChild(o);
       });
-  }
-}
-
-function finishLogin() {
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('user-display').innerText=currentUser;
-  document.getElementById('inp-asesor').value=currentUser;
-  initForm();
-  updateGestCount();
-}
-function logout(){
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('app').style.display='none';
-  document.getElementById('inp-pass').value='';
-  const btn=document.querySelector('.login-btn');
-  btn.textContent='🔐 Ingresar';
-  btn.disabled=false;
-}
-
-function initForm(){
-  const sel=document.getElementById('departamento');
-  sel.innerHTML='';
-  Object.keys(colombia).sort().forEach(d=>{
-    const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);
-  });
-  sel.value='CÓRDOBA';
-  loadMunicipios();
-  setTimeout(()=>{document.getElementById('municipio').value='MONTERÍA';},50);
-  const manana=new Date();manana.setDate(manana.getDate()+1);
-  document.getElementById('fecha_proxima').value=manana.toISOString().split('T')[0];
-  const ahora=new Date();
-  const hp=ahora.getHours().toString().padStart(2,'0')+':'+ahora.getMinutes().toString().padStart(2,'0');
-  if(document.getElementById('hora_proxima')) document.getElementById('hora_proxima').value=hp;
-}
-
-function loadMunicipios(){
-  const d=document.getElementById('departamento').value;
-  const ms=document.getElementById('municipio');
-  ms.innerHTML='';
-  (colombia[d]||[]).forEach(m=>{
-    const o=document.createElement('option');o.value=m;o.textContent=m;ms.appendChild(o);
-  });
-}
-
-function switchTab(tab,el){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('sec-'+tab).classList.add('active');
-  if(tab==='gestiones')renderGestiones();
-}
-
-function toggleProxima(v){
-  hayProxima=(v==='si');
-  document.getElementById('rad-si').checked=hayProxima;
-  document.getElementById('rad-no').checked=!hayProxima;
-  document.getElementById('opt-si').classList.toggle('selected',hayProxima);
-  document.getElementById('opt-no').classList.toggle('selected',!hayProxima);
-  document.getElementById('proxima-section').classList.toggle('visible',hayProxima);
-}
-
-function searchClientes(q){
-  const drop=document.getElementById('drop-clientes');
-  const clientes=getClientes();
-  const matches=q.length<1?clientes:clientes.filter(c=>c.nombre.toLowerCase().includes(q.toLowerCase()));
-  if(matches.length===0){drop.classList.remove('open');return;}
-  drop.innerHTML=matches.slice(0,8).map(c=>`<div class="autocomplete-item" onclick="selectCliente('${c.id}')"><strong>${c.nombre}</strong><span>${c.cc_nit||''} ${c.tel||''}</span></div>`).join('');
-  drop.classList.add('open');
-}
-
-function selectCliente(id){
-  const c=getClientes().find(x=>x.id===id);
-  if(!c)return;
-  selectedClienteId=id;
-  document.getElementById('cliente').value=c.nombre;
-  document.getElementById('cc_nit').value=c.cc_nit||'';
-  document.getElementById('tel_cliente').value=c.tel||'';
-  document.getElementById('dir_cliente').value=c.dir||'';
-  document.getElementById('drop-clientes').classList.remove('open');
-  document.getElementById('badge-cliente-txt').textContent=c.nombre;
-  document.getElementById('badge-cliente').style.display='inline-flex';
-  document.getElementById('proyecto').value='';
-  selectedProyectoId=null;
-  clearProyecto();
-}
-
-function nuevoCliente(){
-  selectedClienteId=null;
-  document.getElementById('cliente').value='';
-  document.getElementById('cc_nit').value='';
-  document.getElementById('tel_cliente').value='';
-  document.getElementById('dir_cliente').value='';
-  document.getElementById('badge-cliente').style.display='none';
-  document.getElementById('drop-clientes').classList.remove('open');
-  document.getElementById('cliente').focus();
-}
-
-function clearCliente(){
-  nuevoCliente();
-  clearProyecto();
-}
-
-function searchProyectos(q){
-  const drop=document.getElementById('drop-proyectos');
-  let proyectos=getProyectos();
-  if(selectedClienteId)proyectos=proyectos.filter(p=>p.cliente_id===selectedClienteId);
-  const matches=q.length<1?proyectos:proyectos.filter(p=>p.nombre.toLowerCase().includes(q.toLowerCase()));
-  if(matches.length===0){drop.classList.remove('open');return;}
-  drop.innerHTML=matches.slice(0,8).map(p=>`<div class="autocomplete-item" onclick="selectProyecto('${p.id}')"><strong>${p.nombre}</strong><span>${p.municipio||''}</span></div>`).join('');
-  drop.classList.add('open');
-}
-
-function selectProyecto(id){
-  const p=getProyectos().find(x=>x.id===id);
-  if(!p)return;
-  selectedProyectoId=id;
-  document.getElementById('proyecto').value=p.nombre;
-  document.getElementById('dir_proyecto').value=p.dir||'';
-  if(p.departamento){
-    document.getElementById('departamento').value=p.departamento;
-    loadMunicipios();
-    setTimeout(()=>{document.getElementById('municipio').value=p.municipio||'';},50);
-  }
-  document.getElementById('contacto').value=p.contacto||'';
-  document.getElementById('tel_contacto').value=p.tel_contacto||'';
-  document.getElementById('drop-proyectos').classList.remove('open');
-  document.getElementById('badge-proyecto-txt').textContent=p.nombre;
-  document.getElementById('badge-proyecto').style.display='inline-flex';
-}
-
-function nuevoProyecto(){
-  selectedProyectoId=null;
-  document.getElementById('proyecto').value='';
-  document.getElementById('dir_proyecto').value='';
-  document.getElementById('contacto').value='';
-  document.getElementById('tel_contacto').value='';
-  document.getElementById('badge-proyecto').style.display='none';
-  document.getElementById('drop-proyectos').classList.remove('open');
-  document.getElementById('proyecto').focus();
-}
-
-function clearProyecto(){nuevoProyecto();}
-
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.autocomplete-wrap')){
-    document.querySelectorAll('.autocomplete-drop').forEach(d=>d.classList.remove('open'));
-  }
-});
-
-document.getElementById('visita-form').addEventListener('submit',function(e){
-  e.preventDefault();
-  if(!navigator.geolocation){showError('Tu navegador no soporta GPS.');return;}
-  setLoading(true);hideMessages();
-  navigator.geolocation.getCurrentPosition(
-    pos=>sendData(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy),
-    err=>{
-      setLoading(false);
-      let m='Error al obtener GPS.';
-      if(err.code===1)m='⚠️ Permiso de ubicación denegado. Activa el GPS y vuelve a intentar.';
-      if(err.code===2)m='📡 GPS no disponible. Verifica que el GPS esté encendido.';
-      if(err.code===3)m='⏱️ Tiempo de espera agotado. Sal a un lugar abierto e intenta de nuevo.';
-      showError(m);
-    },
-    {enableHighAccuracy:true,timeout:15000,maximumAge:0}
-  );
-});
-
-function sendData(lat,lng,acc){
-  const nombre_cliente=document.getElementById('cliente').value.trim();
-  const nombre_proyecto=document.getElementById('proyecto').value.trim();
-  const map_url=`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-
-  let isNewCliente = false;
-  let isNewProyecto = false;
-
-  // Guardar/actualizar cliente en localStorage
-  if(nombre_cliente){
-    const clientes=getClientes();
-    if(!selectedClienteId){
-      selectedClienteId=genId();
-      isNewCliente=true;
-      const nuevo={id:selectedClienteId,nombre:nombre_cliente,cc_nit:document.getElementById('cc_nit').value,tel:document.getElementById('tel_cliente').value,dir:document.getElementById('dir_cliente').value};
-      clientes.push(nuevo);saveClientes(clientes);
-    } else {
-      const idx=clientes.findIndex(c=>c.id===selectedClienteId);
-      if(idx>-1){clientes[idx]={...clientes[idx],nombre:nombre_cliente,cc_nit:document.getElementById('cc_nit').value,tel:document.getElementById('tel_cliente').value,dir:document.getElementById('dir_cliente').value};saveClientes(clientes);}
+      sel.value = 'CÓRDOBA';
+      loadMunicipios();
+      setTimeout(() => { document.getElementById('municipio').value = 'MONTERÍA'; }, 50);
+      const manana = new Date(); manana.setDate(manana.getDate() + 1);
+      document.getElementById('fecha_proxima').value = manana.toISOString().split('T')[0];
+      const ahora = new Date();
+      const hp = ahora.getHours().toString().padStart(2, '0') + ':' + ahora.getMinutes().toString().padStart(2, '0');
+      if (document.getElementById('hora_proxima')) document.getElementById('hora_proxima').value = hp;
     }
-  }
 
-  // Guardar/actualizar proyecto en localStorage
-  if(nombre_proyecto){
-    const proyectos=getProyectos();
-    if(!selectedProyectoId){
-      selectedProyectoId=genId();
-      isNewProyecto=true;
-      const np={id:selectedProyectoId,cliente_id:selectedClienteId||'',nombre:nombre_proyecto,dir:document.getElementById('dir_proyecto').value,departamento:document.getElementById('departamento').value,municipio:document.getElementById('municipio').value,contacto:document.getElementById('contacto').value,tel_contacto:document.getElementById('tel_contacto').value};
-      proyectos.push(np);saveProyectos(proyectos);
-    } else {
-      const idx=proyectos.findIndex(p=>p.id===selectedProyectoId);
-      if(idx>-1){proyectos[idx]={...proyectos[idx],nombre:nombre_proyecto,dir:document.getElementById('dir_proyecto').value,departamento:document.getElementById('departamento').value,municipio:document.getElementById('municipio').value,contacto:document.getElementById('contacto').value,tel_contacto:document.getElementById('tel_contacto').value};saveProyectos(proyectos);}
+    function loadMunicipios() {
+      const d = document.getElementById('departamento').value;
+      const ms = document.getElementById('municipio');
+      ms.innerHTML = '';
+      (colombia[d] || []).forEach(m => {
+        const o = document.createElement('option'); o.value = m; o.textContent = m; ms.appendChild(o);
+      });
     }
-  }
 
-  const fp=document.getElementById('fecha_proxima').value;
-  const hp=document.getElementById('hora_proxima').value;
-  const pg=document.getElementById('proxima_gestion').value;
-  const dg=document.getElementById('desc_gestion').value;
-
-  // Guardar gestión en localStorage si hay próxima
-  if(hayProxima&&fp&&pg){
-    const gestiones=getGestiones();
-    gestiones.push({id:genId(),asesor:currentUser,fecha:fp,hora:hp,tipo:pg,descripcion:dg,cliente:nombre_cliente,proyecto:nombre_proyecto,map_url:map_url,completada:false,creada:new Date().toISOString()});
-    saveGestiones(gestiones);
-    updateGestCount();
-  }
-
-  const payload={
-    asesor:currentUser,tipo_visita:document.getElementById('tipo_visita').value,
-    nuevo_cliente:isNewCliente,cliente_id:selectedClienteId,cliente:nombre_cliente,cc_nit:document.getElementById('cc_nit').value,
-    dir_cliente:document.getElementById('dir_cliente').value,tel_cliente:document.getElementById('tel_cliente').value,
-    nuevo_proyecto:isNewProyecto,proyecto_id:selectedProyectoId,proyecto:nombre_proyecto,dir_proyecto:document.getElementById('dir_proyecto').value,
-    departamento:document.getElementById('departamento').value,municipio:document.getElementById('municipio').value,
-    contacto:document.getElementById('contacto').value,tel_contacto:document.getElementById('tel_contacto').value,
-    observaciones:document.getElementById('observaciones').value,
-    hay_proxima:hayProxima?'SI':'NO',fecha_proxima:fp,hora_proxima:hp,proxima_gestion:pg,desc_gestion:dg,
-    lat:lat,lng:lng,acc:acc,map_url:map_url
-  };
-
-  if(SCRIPT_URL.includes('--reemplazar--')){
-    setLoading(false);showSuccessModal(payload);
-    document.getElementById('visita-form').reset();resetForm();
-    return;
-  }
-
-  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)})
-    .then(()=>{setLoading(false);showSuccessModal(payload);document.getElementById('visita-form').reset();resetForm();})
-    .catch(()=>{setLoading(false);showError('Error de conexión. Intente nuevamente.');});
-}
-
-function resetForm(){
-  selectedClienteId=null;selectedProyectoId=null;hayProxima=false;
-  document.getElementById('inp-asesor').value=currentUser;
-  document.getElementById('badge-cliente').style.display='none';
-  document.getElementById('badge-proyecto').style.display='none';
-  document.getElementById('opt-no').classList.add('selected');
-  document.getElementById('opt-si').classList.remove('selected');
-  document.getElementById('proxima-section').classList.remove('visible');
-  initForm();
-}
-
-function showSuccessModal(p){
-  const hayP=p.hay_proxima==='SI';
-  document.getElementById('modal-body-content').innerHTML=`
-    <p style="font-size:13px;margin-bottom:12px;">Visita registrada correctamente para <strong>${p.cliente}</strong>.</p>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">📍 GPS: ${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</p>
-    ${hayP?`<div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:8px;padding:12px;margin-top:12px;"><p style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;">📅 Próxima Gestión Agendada</p><p style="font-size:13px;">${p.proxima_gestion}</p><p style="font-size:12px;color:var(--muted);">${p.fecha_proxima} · ${p.cliente} / ${p.proyecto}</p><p style="font-size:12px;margin-top:4px;">${p.desc_gestion}</p></div>`:'<p style="font-size:12px;color:var(--muted);">Sin próxima gestión agendada.</p>'}
-  `;
-  const calBtn=document.getElementById('cal-link');
-  if(hayP){
-    let calDates='';
-    if(p.hora_proxima){
-      const d=p.fecha_proxima.replace(/-/g,'');
-      const h1=p.hora_proxima.replace(':','');
-      const std=new Date(`${p.fecha_proxima}T${p.hora_proxima}`);
-      std.setHours(std.getHours()+1);
-      const h2=std.getHours().toString().padStart(2,'0')+std.getMinutes().toString().padStart(2,'0');
-      const d2=std.toISOString().split('T')[0].replace(/-/g,'');
-      calDates=`${d}T${h1}00/${d2}T${h2}00`;
-    }else{
-      const d=p.fecha_proxima.replace(/-/g,'');
-      const tomorrow=new Date(p.fecha_proxima+'T12:00:00');tomorrow.setDate(tomorrow.getDate()+1);
-      const d2=tomorrow.toISOString().split('T')[0].replace(/-/g,'');
-      calDates=`${d}/${d2}`;
+    function switchTab(tab, el) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('sec-' + tab).classList.add('active');
+      if (tab === 'gestiones') renderGestiones();
     }
-    const txt=encodeURIComponent(`${p.proxima_gestion} — ${p.cliente} / ${p.proyecto}`);
-    const det=encodeURIComponent(`Gestión: ${p.proxima_gestion}\n${p.desc_gestion}\nCliente: ${p.cliente}\nProyecto: ${p.proyecto}\n📍 ${p.map_url}`);
-    calBtn.href=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${txt}&dates=${calDates}&details=${det}`;
-    calBtn.style.display='flex';
-  } else {
-    calBtn.style.display='none';
-  }
-  document.getElementById('modal-success').classList.add('open');
-}
 
-function closeModal(){document.getElementById('modal-success').classList.remove('open');}
-
-function updateGestCount(){
-  const gs=getGestiones().filter(g=>!g.completada && g.asesor===currentUser);
-  const cnt=document.getElementById('gest-count');
-  if(gs.length>0){cnt.textContent=gs.length;cnt.style.display='inline';}
-  else{cnt.style.display='none';}
-}
-
-function renderGestiones(){
-  const gs=getGestiones().filter(g=>!g.completada && g.asesor===currentUser).sort((a,b)=>a.fecha.localeCompare(b.fecha));
-  const cont=document.getElementById('gestiones-list');
-  if(gs.length===0){
-    cont.innerHTML='<div class="empty-state"><div class="ico">📅</div><h3>Sin gestiones pendientes</h3><p>Cuando registres visitas con próxima gestión,<br>aparecerán aquí.</p></div>';
-    return;
-  }
-  const today=new Date().toISOString().split('T')[0];
-  const tom=new Date();tom.setDate(tom.getDate()+1);
-  const tomorrow=tom.toISOString().split('T')[0];
-  let html='';
-  let lastLabel='';
-  gs.forEach(g=>{
-    let label='',badgeClass='';
-    if(g.fecha<today){label='⚠️ Vencidas';badgeClass='badge-vencida';}
-    else if(g.fecha===today){label='🔥 Hoy';badgeClass='badge-hoy';}
-    else if(g.fecha===tomorrow){label='📅 Mañana';badgeClass='badge-proxima';}
-    else{label='🗓️ Próximas';badgeClass='badge-proxima';}
-    if(label!==lastLabel){html+=`<div class="day-label">${label}</div>`;lastLabel=label;}
-    const d=g.fecha.split('-');
-    const horaStr=g.hora?` ${g.hora}`:'';
-    const fechaStr=`${d[2]}/${d[1]}/${d[0]}${horaStr}`;
-    const txt=encodeURIComponent(`${g.tipo} — ${g.cliente} / ${g.proyecto}`);
-    const det=encodeURIComponent(`Gestión: ${g.tipo}\n${g.descripcion||''}\nCliente: ${g.cliente}\nProyecto: ${g.proyecto}\n📍 ${g.map_url||''}`);
-    
-    let calDates='';
-    if(g.hora){
-      const df=g.fecha.replace(/-/g,'');
-      const h1=g.hora.replace(':','');
-      const std=new Date(`${g.fecha}T${g.hora}`);
-      std.setHours(std.getHours()+1);
-      const h2=std.getHours().toString().padStart(2,'0')+std.getMinutes().toString().padStart(2,'0');
-      const df2=std.toISOString().split('T')[0].replace(/-/g,'');
-      calDates=`${df}T${h1}00/${df2}T${h2}00`;
-    }else{
-      const df=g.fecha.replace(/-/g,'');
-      const tom2=new Date(g.fecha+'T12:00:00');tom2.setDate(tom2.getDate()+1);
-      const df2=tom2.toISOString().split('T')[0].replace(/-/g,'');
-      calDates=`${df}/${df2}`;
+    function toggleProxima(v) {
+      hayProxima = (v === 'si');
+      document.getElementById('rad-si').checked = hayProxima;
+      document.getElementById('rad-no').checked = !hayProxima;
+      document.getElementById('opt-si').classList.toggle('selected', hayProxima);
+      document.getElementById('opt-no').classList.toggle('selected', !hayProxima);
+      document.getElementById('proxima-section').classList.toggle('visible', hayProxima);
     }
-    const calUrl=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${txt}&dates=${calDates}&details=${det}`;
-    html+=`<div class="gest-card">
-      <div class="gest-card-top"><span class="gest-tipo">${g.tipo}</span><span class="gest-fecha">${fechaStr}</span></div>
-      <div class="gest-cliente">${g.cliente}</div>
-      <div class="gest-proyecto">📍 ${g.proyecto}</div>
-      ${g.descripcion?`<div class="gest-desc">${g.descripcion}</div>`:''}
-      <div class="gest-actions">
-        <a href="${calUrl}" target="_blank" class="cal-btn btn-sm" style="font-size:11px;padding:7px 12px;flex:none;">📅 Calendar</a>
-        <button class="btn-sm btn-green" onclick="completarGestion('${g.id}', this)">✓ Completada</button>
-      </div>
-    </div>`;
-  });
-  cont.innerHTML=html;
-}
 
-function completarGestion(id, btn){
-  const originalText = btn.innerHTML;
-  btn.innerHTML = 'Sincronizando...';
-  btn.disabled = true;
+    function searchClientes(q) {
+      const drop = document.getElementById('drop-clientes');
+      const clientes = getClientes();
+      const matches = q.length < 1 ? clientes : clientes.filter(c => c.nombre.toLowerCase().includes(q.toLowerCase()));
+      if (matches.length === 0) { drop.classList.remove('open'); return; }
+      drop.innerHTML = matches.slice(0, 8).map(c => `<div class="autocomplete-item" onclick="selectCliente('${c.id}')"><strong>${c.nombre}</strong><span>${c.cc_nit || ''} ${c.tel || ''}</span></div>`).join('');
+      drop.classList.add('open');
+    }
 
-  const gs=getGestiones();
-  const idx=gs.findIndex(g=>g.id===id);
-  if(idx===-1) return;
-  const g = gs[idx];
+    function selectCliente(id) {
+      const c = getClientes().find(x => x.id === id);
+      if (!c) return;
+      selectedClienteId = id;
+      document.getElementById('cliente').value = c.nombre;
+      document.getElementById('cc_nit').value = c.cc_nit || '';
+      document.getElementById('tel_cliente').value = c.tel || '';
+      document.getElementById('dir_cliente').value = c.dir || '';
+      document.getElementById('drop-clientes').classList.remove('open');
+      document.getElementById('badge-cliente-txt').textContent = c.nombre;
+      document.getElementById('badge-cliente').style.display = 'inline-flex';
+      document.getElementById('proyecto').value = '';
+      selectedProyectoId = null;
+      clearProyecto();
+    }
 
-  const payload = {
-    action: 'completarGestion',
-    asesor: g.asesor,
-    cliente: g.cliente,
-    fecha_proxima: g.fecha,
-    hora_proxima: g.hora || ''
-  };
+    function nuevoCliente() {
+      selectedClienteId = null;
+      document.getElementById('cliente').value = '';
+      document.getElementById('cc_nit').value = '';
+      document.getElementById('tel_cliente').value = '';
+      document.getElementById('dir_cliente').value = '';
+      document.getElementById('badge-cliente').style.display = 'none';
+      document.getElementById('drop-clientes').classList.remove('open');
+      document.getElementById('cliente').focus();
+    }
 
-  fetch(SCRIPT_URL, {method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)})
-    .then(()=>{
-      gs[idx].completada=true;saveGestiones(gs);
-      updateGestCount();renderGestiones();
-    })
-    .catch(()=>{
-      btn.innerHTML = '❌ Error';
-      setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
+    function clearCliente() {
+      nuevoCliente();
+      clearProyecto();
+    }
+
+    function searchProyectos(q) {
+      const drop = document.getElementById('drop-proyectos');
+      let proyectos = getProyectos();
+      if (selectedClienteId) proyectos = proyectos.filter(p => p.cliente_id === selectedClienteId);
+      const matches = q.length < 1 ? proyectos : proyectos.filter(p => p.nombre.toLowerCase().includes(q.toLowerCase()));
+      if (matches.length === 0) { drop.classList.remove('open'); return; }
+      drop.innerHTML = matches.slice(0, 8).map(p => `<div class="autocomplete-item" onclick="selectProyecto('${p.id}')"><strong>${p.nombre}</strong><span>${p.municipio || ''}</span></div>`).join('');
+      drop.classList.add('open');
+    }
+
+    function selectProyecto(id) {
+      const p = getProyectos().find(x => x.id === id);
+      if (!p) return;
+      selectedProyectoId = id;
+      document.getElementById('proyecto').value = p.nombre;
+      document.getElementById('dir_proyecto').value = p.dir || '';
+      if (p.departamento) {
+        document.getElementById('departamento').value = p.departamento;
+        loadMunicipios();
+        setTimeout(() => { document.getElementById('municipio').value = p.municipio || ''; }, 50);
+      }
+      document.getElementById('contacto').value = p.contacto || '';
+      document.getElementById('tel_contacto').value = p.tel_contacto || '';
+      document.getElementById('drop-proyectos').classList.remove('open');
+      document.getElementById('badge-proyecto-txt').textContent = p.nombre;
+      document.getElementById('badge-proyecto').style.display = 'inline-flex';
+    }
+
+    function nuevoProyecto() {
+      selectedProyectoId = null;
+      document.getElementById('proyecto').value = '';
+      document.getElementById('dir_proyecto').value = '';
+      document.getElementById('contacto').value = '';
+      document.getElementById('tel_contacto').value = '';
+      document.getElementById('badge-proyecto').style.display = 'none';
+      document.getElementById('drop-proyectos').classList.remove('open');
+      document.getElementById('proyecto').focus();
+    }
+
+    function clearProyecto() { nuevoProyecto(); }
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.autocomplete-wrap')) {
+        document.querySelectorAll('.autocomplete-drop').forEach(d => d.classList.remove('open'));
+      }
     });
-}
 
-function setLoading(v){
-  const btn=document.getElementById('btn-submit');
-  const spin=document.getElementById('submit-spinner');
-  const txt=document.getElementById('submit-text');
-  btn.disabled=v;spin.style.display=v?'block':'none';
-  txt.innerText=v?'Obteniendo GPS...':'💾 Guardar Visita y GPS';
-}
-function showError(m){const el=document.getElementById('msg-error');el.innerHTML='❌ '+m;el.style.display='block';}
-function showSuccess(m){const el=document.getElementById('msg-success');el.innerHTML='✅ '+m;el.style.display='block';}
-function hideMessages(){document.getElementById('msg-error').style.display='none';document.getElementById('msg-success').style.display='none';}
+    document.getElementById('visita-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!navigator.geolocation) { showError('Tu navegador no soporta GPS.'); return; }
+      setLoading(true); hideMessages();
+      navigator.geolocation.getCurrentPosition(
+        pos => sendData(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy),
+        err => {
+          setLoading(false);
+          let m = 'Error al obtener GPS.';
+          if (err.code === 1) m = '⚠️ Permiso de ubicación denegado. Activa el GPS y vuelve a intentar.';
+          if (err.code === 2) m = '📡 GPS no disponible. Verifica que el GPS esté encendido.';
+          if (err.code === 3) m = '⏱️ Tiempo de espera agotado. Sal a un lugar abierto e intenta de nuevo.';
+          showError(m);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    });
 
-document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('inp-user').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-  document.getElementById('inp-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-});
-</script>
-</body>
-</html>
+    function sendData(lat, lng, acc) {
+      const nombre_cliente = document.getElementById('cliente').value.trim();
+      const nombre_proyecto = document.getElementById('proyecto').value.trim();
+      const map_url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+      let isNewCliente = false;
+      let isNewProyecto = false;
+
+      // Guardar/actualizar cliente en localStorage
+      if (nombre_cliente) {
+        const clientes = getClientes();
+        if (!selectedClienteId) {
+          selectedClienteId = genId();
+          isNewCliente = true;
+          const nuevo = { id: selectedClienteId, nombre: nombre_cliente, cc_nit: document.getElementById('cc_nit').value, tel: document.getElementById('tel_cliente').value, dir: document.getElementById('dir_cliente').value };
+          clientes.push(nuevo); saveClientes(clientes);
+        } else {
+          const idx = clientes.findIndex(c => c.id === selectedClienteId);
+          if (idx > -1) { clientes[idx] = { ...clientes[idx], nombre: nombre_cliente, cc_nit: document.getElementById('cc_nit').value, tel: document.getElementById('tel_cliente').value, dir: document.getElementById('dir_cliente').value }; saveClientes(clientes); }
+        }
+      }
+
+      // Guardar/actualizar proyecto en localStorage
+      if (nombre_proyecto) {
+        const proyectos = getProyectos();
+        if (!selectedProyectoId) {
+          selectedProyectoId = genId();
+          isNewProyecto = true;
+          const np = { id: selectedProyectoId, cliente_id: selectedClienteId || '', nombre: nombre_proyecto, dir: document.getElementById('dir_proyecto').value, departamento: document.getElementById('departamento').value, municipio: document.getElementById('municipio').value, contacto: document.getElementById('contacto').value, tel_contacto: document.getElementById('tel_contacto').value };
+          proyectos.push(np); saveProyectos(proyectos);
+        } else {
+          const idx = proyectos.findIndex(p => p.id === selectedProyectoId);
+          if (idx > -1) { proyectos[idx] = { ...proyectos[idx], nombre: nombre_proyecto, dir: document.getElementById('dir_proyecto').value, departamento: document.getElementById('departamento').value, municipio: document.getElementById('municipio').value, contacto: document.getElementById('contacto').value, tel_contacto: document.getElementById('tel_contacto').value }; saveProyectos(proyectos); }
+        }
+      }
+
+      const fp = document.getElementById('fecha_proxima').value;
+      const hp = document.getElementById('hora_proxima').value;
+      const pg = document.getElementById('proxima_gestion').value;
+      const dg = document.getElementById('desc_gestion').value;
+
+      // Guardar gestión en localStorage si hay próxima
+      if (hayProxima && fp && pg) {
+        const gestiones = getGestiones();
+        gestiones.push({ id: genId(), asesor: currentUser, fecha: fp, hora: hp, tipo: pg, descripcion: dg, cliente: nombre_cliente, proyecto: nombre_proyecto, map_url: map_url, completada: false, creada: new Date().toISOString() });
+        saveGestiones(gestiones);
+        updateGestCount();
+      }
+
+      const payload = {
+        asesor: currentUser, tipo_visita: document.getElementById('tipo_visita').value,
+        nuevo_cliente: isNewCliente, cliente_id: selectedClienteId, cliente: nombre_cliente, cc_nit: document.getElementById('cc_nit').value,
+        dir_cliente: document.getElementById('dir_cliente').value, tel_cliente: document.getElementById('tel_cliente').value,
+        nuevo_proyecto: isNewProyecto, proyecto_id: selectedProyectoId, proyecto: nombre_proyecto, dir_proyecto: document.getElementById('dir_proyecto').value,
+        departamento: document.getElementById('departamento').value, municipio: document.getElementById('municipio').value,
+        contacto: document.getElementById('contacto').value, tel_contacto: document.getElementById('tel_contacto').value,
+        observaciones: document.getElementById('observaciones').value,
+        hay_proxima: hayProxima ? 'SI' : 'NO', fecha_proxima: fp, hora_proxima: hp, proxima_gestion: pg, desc_gestion: dg,
+        lat: lat, lng: lng, acc: acc, map_url: map_url
+      };
+
+      if (SCRIPT_URL.includes('--reemplazar--')) {
+        setLoading(false); showSuccessModal(payload);
+        document.getElementById('visita-form').reset(); resetForm();
+        return;
+      }
+
+      fetch(SCRIPT_URL, { m
