@@ -1287,4 +1287,167 @@
         return;
       }
 
-      fetch(SCRIPT_URL, { m
+      fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) })
+        .then(() => { setLoading(false); showSuccessModal(payload); document.getElementById('visita-form').reset(); resetForm(); })
+        .catch(() => { setLoading(false); showError('Error de conexión. Intente nuevamente.'); });
+    }
+
+    function resetForm() {
+      selectedClienteId = null; selectedProyectoId = null; hayProxima = false;
+      document.getElementById('inp-asesor').value = currentUser;
+      document.getElementById('badge-cliente').style.display = 'none';
+      document.getElementById('badge-proyecto').style.display = 'none';
+      document.getElementById('opt-no').classList.add('selected');
+      document.getElementById('opt-si').classList.remove('selected');
+      document.getElementById('proxima-section').classList.remove('visible');
+      initForm();
+    }
+
+    function showSuccessModal(p) {
+      const hayP = p.hay_proxima === 'SI';
+      document.getElementById('modal-body-content').innerHTML = `
+    <p style="font-size:13px;margin-bottom:12px;">Visita registrada correctamente para <strong>${p.cliente}</strong>.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">📍 GPS: ${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</p>
+    ${hayP ? `<div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:8px;padding:12px;margin-top:12px;"><p style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;">📅 Próxima Gestión Agendada</p><p style="font-size:13px;">${p.proxima_gestion}</p><p style="font-size:12px;color:var(--muted);">${p.fecha_proxima} · ${p.cliente} / ${p.proyecto}</p><p style="font-size:12px;margin-top:4px;">${p.desc_gestion}</p></div>` : '<p style="font-size:12px;color:var(--muted);">Sin próxima gestión agendada.</p>'}
+  `;
+      const calBtn = document.getElementById('cal-link');
+      if (hayP) {
+        let calDates = '';
+        if (p.hora_proxima) {
+          const d = p.fecha_proxima.replace(/-/g, '');
+          const h1 = p.hora_proxima.replace(':', '');
+          const std = new Date(`${p.fecha_proxima}T${p.hora_proxima}`);
+          std.setHours(std.getHours() + 1);
+          const h2 = std.getHours().toString().padStart(2, '0') + std.getMinutes().toString().padStart(2, '0');
+          const d2 = std.toISOString().split('T')[0].replace(/-/g, '');
+          calDates = `${d}T${h1}00/${d2}T${h2}00`;
+        } else {
+          const d = p.fecha_proxima.replace(/-/g, '');
+          const tomorrow = new Date(p.fecha_proxima + 'T12:00:00'); tomorrow.setDate(tomorrow.getDate() + 1);
+          const d2 = tomorrow.toISOString().split('T')[0].replace(/-/g, '');
+          calDates = `${d}/${d2}`;
+        }
+        const txt = encodeURIComponent(`${p.proxima_gestion} — ${p.cliente} / ${p.proyecto}`);
+        const det = encodeURIComponent(`Gestión: ${p.proxima_gestion}\n${p.desc_gestion}\nCliente: ${p.cliente}\nProyecto: ${p.proyecto}\n📍 ${p.map_url}`);
+        const srcParam = calendarId ? `&src=${encodeURIComponent(calendarId)}` : '';
+        calBtn.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${txt}&dates=${calDates}&details=${det}${srcParam}`;
+        calBtn.style.display = 'flex';
+      } else {
+        calBtn.style.display = 'none';
+      }
+      document.getElementById('modal-success').classList.add('open');
+    }
+
+    function closeModal() { document.getElementById('modal-success').classList.remove('open'); }
+
+    function updateGestCount() {
+      const gs = getGestiones().filter(g => !g.completada && g.asesor === currentUser);
+      const cnt = document.getElementById('gest-count');
+      if (gs.length > 0) { cnt.textContent = gs.length; cnt.style.display = 'inline'; }
+      else { cnt.style.display = 'none'; }
+    }
+
+    function renderGestiones() {
+      const gs = getGestiones().filter(g => !g.completada && g.asesor === currentUser).sort((a, b) => a.fecha.localeCompare(b.fecha));
+      const cont = document.getElementById('gestiones-list');
+      if (gs.length === 0) {
+        cont.innerHTML = '<div class="empty-state"><div class="ico">📅</div><h3>Sin gestiones pendientes</h3><p>Cuando registres visitas con próxima gestión,<br>aparecerán aquí.</p></div>';
+        return;
+      }
+      const today = new Date().toISOString().split('T')[0];
+      const tom = new Date(); tom.setDate(tom.getDate() + 1);
+      const tomorrow = tom.toISOString().split('T')[0];
+      let html = '';
+      let lastLabel = '';
+      gs.forEach(g => {
+        let label = '', badgeClass = '';
+        if (g.fecha < today) { label = '⚠️ Vencidas'; badgeClass = 'badge-vencida'; }
+        else if (g.fecha === today) { label = '🔥 Hoy'; badgeClass = 'badge-hoy'; }
+        else if (g.fecha === tomorrow) { label = '📅 Mañana'; badgeClass = 'badge-proxima'; }
+        else { label = '🗓️ Próximas'; badgeClass = 'badge-proxima'; }
+        if (label !== lastLabel) { html += `<div class="day-label">${label}</div>`; lastLabel = label; }
+        const d = g.fecha.split('-');
+        const horaStr = g.hora ? ` ${g.hora}` : '';
+        const fechaStr = `${d[2]}/${d[1]}/${d[0]}${horaStr}`;
+        const txt = encodeURIComponent(`${g.tipo} — ${g.cliente} / ${g.proyecto}`);
+        const det = encodeURIComponent(`Gestión: ${g.tipo}\n${g.descripcion || ''}\nCliente: ${g.cliente}\nProyecto: ${g.proyecto}\n📍 ${g.map_url || ''}`);
+
+        let calDates = '';
+        if (g.hora) {
+          const df = g.fecha.replace(/-/g, '');
+          const h1 = g.hora.replace(':', '');
+          const std = new Date(`${g.fecha}T${g.hora}`);
+          std.setHours(std.getHours() + 1);
+          const h2 = std.getHours().toString().padStart(2, '0') + std.getMinutes().toString().padStart(2, '0');
+          const df2 = std.toISOString().split('T')[0].replace(/-/g, '');
+          calDates = `${df}T${h1}00/${df2}T${h2}00`;
+        } else {
+          const df = g.fecha.replace(/-/g, '');
+          const tom2 = new Date(g.fecha + 'T12:00:00'); tom2.setDate(tom2.getDate() + 1);
+          const df2 = tom2.toISOString().split('T')[0].replace(/-/g, '');
+          calDates = `${df}/${df2}`;
+        }
+        const srcParam = calendarId ? `&src=${encodeURIComponent(calendarId)}` : '';
+        const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${txt}&dates=${calDates}&details=${det}${srcParam}`;
+        html += `<div class="gest-card">
+      <div class="gest-card-top"><span class="gest-tipo">${g.tipo}</span><span class="gest-fecha">${fechaStr}</span></div>
+      <div class="gest-cliente">${g.cliente}</div>
+      <div class="gest-proyecto">📍 ${g.proyecto}</div>
+      ${g.descripcion ? `<div class="gest-desc">${g.descripcion}</div>` : ''}
+      <div class="gest-actions">
+        <a href="${calUrl}" target="_blank" class="cal-btn btn-sm" style="font-size:11px;padding:7px 12px;flex:none;">📅 Calendar</a>
+        <button class="btn-sm btn-green" onclick="completarGestion('${g.id}', this)">✓ Completada</button>
+      </div>
+    </div>`;
+      });
+      cont.innerHTML = html;
+    }
+
+    function completarGestion(id, btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = 'Sincronizando...';
+      btn.disabled = true;
+
+      const gs = getGestiones();
+      const idx = gs.findIndex(g => g.id === id);
+      if (idx === -1) return;
+      const g = gs[idx];
+
+      const payload = {
+        action: 'completarGestion',
+        asesor: g.asesor,
+        cliente: g.cliente,
+        fecha_proxima: g.fecha,
+        hora_proxima: g.hora || ''
+      };
+
+      fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) })
+        .then(() => {
+          gs[idx].completada = true; saveGestiones(gs);
+          updateGestCount(); renderGestiones();
+        })
+        .catch(() => {
+          btn.innerHTML = '❌ Error';
+          setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
+        });
+    }
+
+    function setLoading(v) {
+      const btn = document.getElementById('btn-submit');
+      const spin = document.getElementById('submit-spinner');
+      const txt = document.getElementById('submit-text');
+      btn.disabled = v; spin.style.display = v ? 'block' : 'none';
+      txt.innerText = v ? 'Obteniendo GPS...' : '💾 Guardar Visita y GPS';
+    }
+    function showError(m) { const el = document.getElementById('msg-error'); el.innerHTML = '❌ ' + m; el.style.display = 'block'; }
+    function showSuccess(m) { const el = document.getElementById('msg-success'); el.innerHTML = '✅ ' + m; el.style.display = 'block'; }
+    function hideMessages() { document.getElementById('msg-error').style.display = 'none'; document.getElementById('msg-success').style.display = 'none'; }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('inp-user').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+      document.getElementById('inp-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    });
+  </script>
+</body>
+
+</html>
